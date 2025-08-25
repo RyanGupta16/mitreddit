@@ -7,7 +7,7 @@ const Analytics = require('../models/Analytics');
 const { 
     generateToken, 
     authenticateToken, 
-    validateManipalEmail,
+    validateEmailFormat,
     userRateLimit 
 } = require('../middleware/auth');
 
@@ -16,7 +16,7 @@ const router = express.Router();
 // @route   POST /api/auth/signup
 // @desc    Register a new user
 // @access  Public
-router.post('/signup', validateManipalEmail, userRateLimit(3, 15 * 60 * 1000), async (req, res) => {
+router.post('/signup', validateEmailFormat, userRateLimit(3, 15 * 60 * 1000), async (req, res) => {
     try {
         const { name, email, password, branch, year } = req.body;
         

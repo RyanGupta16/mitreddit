@@ -259,15 +259,19 @@ const userRateLimit = (maxRequests = 10, windowMs = 60000) => {
     };
 };
 
-// Validate Manipal email domain
-const validateManipalEmail = (req, res, next) => {
+// Validate email format (now accepts all domains for global access)
+const validateEmailFormat = (req, res, next) => {
     const { email } = req.body;
     
-    if (email && !email.endsWith('@manipal.edu')) {
-        return res.status(400).json({
-            success: false,
-            message: 'Please use your Manipal University email address (@manipal.edu)'
-        });
+    if (email) {
+        // Basic email format validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Please enter a valid email address'
+            });
+        }
     }
     
     next();
@@ -302,6 +306,6 @@ module.exports = {
     requireModerator,
     requireOwnershipOrAdmin,
     userRateLimit,
-    validateManipalEmail,
+    validateEmailFormat,
     requireVerifiedEmail
 };

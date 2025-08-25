@@ -1,8 +1,21 @@
 // API Service Module
 class APIService {
     constructor() {
-        this.baseURL = 'http://localhost:5000/api';
+        // Automatically detect the current host and port for global compatibility
+        const currentLocation = window.location;
+        const isLocalhost = currentLocation.hostname === 'localhost' || currentLocation.hostname === '127.0.0.1';
+        
+        // In development/localhost, use the server port (usually 5000)
+        // In production, use the same domain as the frontend
+        if (isLocalhost) {
+            this.baseURL = `${currentLocation.protocol}//${currentLocation.hostname}:5000/api`;
+        } else {
+            this.baseURL = `${currentLocation.protocol}//${currentLocation.host}/api`;
+        }
+        
         this.authToken = this.getAuthToken();
+        
+        console.log('API Service initialized with baseURL:', this.baseURL);
     }
     
     // Authentication methods

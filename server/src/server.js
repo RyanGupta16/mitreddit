@@ -58,20 +58,28 @@ const authLimiter = rateLimit({
     }
 });
 
-// CORS configuration
-const allowedOrigins = process.env.NODE_ENV === 'production' 
-    ? [process.env.CLIENT_URL, process.env.PRODUCTION_URL] 
-    : ['http://localhost:3000', 'http://127.0.0.1:3000', 'http://localhost:5500', 'http://127.0.0.1:5500'];
-
+// CORS configuration - Allow all origins in development for global access
 app.use(cors({
     origin: function (origin, callback) {
         // Allow requests with no origin (mobile apps, curl, etc.)
         if (!origin) return callback(null, true);
         
-        if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV !== 'production') {
+        // In development, allow all origins for global testing
+        if (process.env.NODE_ENV !== 'production') {
             callback(null, true);
         } else {
-            callback(new Error('Not allowed by CORS'));
+            // In production, only allow specific domains
+            const allowedOrigins = [
+                process.env.CLIENT_URL,
+                process.env.PRODUCTION_URL,
+                process.env.DOMAIN_URL
+            ].filter(Boolean);
+            
+            if (allowedOrigins.indexOf(origin) !== -1) {
+                callback(null, true);
+            } else {
+                callback(new Error('Not allowed by CORS'));
+            }
         }
     },
     credentials: true

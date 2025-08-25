@@ -32,10 +32,10 @@ class AuthManager {
             signupForm.addEventListener('submit', (e) => this.handleSignup(e));
         }
         
-        // Email validation for Manipal domain
+        // Email validation for all domains
         const emailInputs = document.querySelectorAll('input[type="email"]');
         emailInputs.forEach(input => {
-            input.addEventListener('blur', (e) => this.validateManipalEmail(e.target));
+            input.addEventListener('blur', (e) => this.validateEmailFormat(e.target));
         });
         
         // Password strength indicator
@@ -206,9 +206,6 @@ class AuthManager {
         } else if (!this.isValidEmail(data.email)) {
             this.showFieldError('email', 'Please enter a valid email address');
             isValid = false;
-        } else if (!data.email.includes('@learner.manipal.edu')) {
-            this.showFieldError('email', 'Please use your Manipal student email (@learner.manipal.edu)');
-            isValid = false;
         }
         
         // Branch validation
@@ -247,11 +244,11 @@ class AuthManager {
         return isValid;
     }
     
-    validateManipalEmail(input) {
+    validateEmailFormat(input) {
         const email = input.value.trim();
         
-        if (email && !email.includes('@learner.manipal.edu')) {
-            this.showInputWarning(input, 'Please use your Manipal student email address');
+        if (email && !this.isValidEmail(email)) {
+            this.showInputWarning(input, 'Please enter a valid email address');
             return false;
         } else {
             this.clearInputWarning(input);
