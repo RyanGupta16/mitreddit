@@ -596,6 +596,11 @@ class MITReddit {
     showLoginModal() {
         document.getElementById('loginModal').classList.add('active');
         document.body.style.overflow = 'hidden';
+        
+        // Re-bind auth events when modal is shown to ensure elements are available
+        if (this.authManager) {
+            this.authManager.bindAuthEvents();
+        }
     }
     
     hideLoginModal() {

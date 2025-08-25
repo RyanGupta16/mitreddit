@@ -2,10 +2,16 @@
 class AuthManager {
     constructor() {
         this.currentUser = null;
+        this.eventsBound = false;
         this.bindAuthEvents();
     }
     
     bindAuthEvents() {
+        // Prevent duplicate event binding
+        if (this.eventsBound) {
+            console.log('🔄 Auth events already bound, skipping...');
+            return;
+        }
         // Tab switching
         document.querySelectorAll('.auth-tabs .tab-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -24,12 +30,31 @@ class AuthManager {
         const loginForm = document.getElementById('loginForm');
         const signupForm = document.getElementById('signupForm');
         
+        console.log('🔍 AuthManager: Binding events...');
+        console.log('Login form found:', !!loginForm);
+        console.log('Signup form found:', !!signupForm);
+        
         if (loginForm) {
             loginForm.addEventListener('submit', (e) => this.handleLogin(e));
+            console.log('✅ Login form event listener attached');
         }
         
         if (signupForm) {
             signupForm.addEventListener('submit', (e) => this.handleSignup(e));
+            console.log('✅ Signup form event listener attached');
+            
+            // Also add direct button click handler as backup
+            const signupBtn = signupForm.querySelector('button[type="submit"]');
+            if (signupBtn) {
+                signupBtn.addEventListener('click', (e) => {
+                    console.log('🖱️ Signup button clicked directly');
+                    if (!e.defaultPrevented) {
+                        e.preventDefault();
+                        this.handleSignup({ target: signupForm, preventDefault: () => {} });
+                    }
+                });
+                console.log('✅ Signup button click listener attached');
+            }
         }
         
         // Email validation for all domains
@@ -51,6 +76,10 @@ class AuthManager {
         if (confirmPasswordInput) {
             confirmPasswordInput.addEventListener('input', (e) => this.validatePasswordConfirmation(e.target));
         }
+        
+        // Mark events as bound
+        this.eventsBound = true;
+        console.log('✅ All auth events successfully bound!');
     }
     
     switchAuthTab(tab) {
@@ -115,9 +144,12 @@ class AuthManager {
     }
     
     async handleSignup(event) {
+        console.log('🚀 handleSignup called!', event);
         event.preventDefault();
         
         const inputs = event.target.querySelectorAll('input, select');
+        console.log('📝 Form inputs found:', inputs.length);
+        
         const signupData = {
             name: inputs[0].value.trim(),
             email: inputs[1].value.trim(),
