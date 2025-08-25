@@ -85,18 +85,46 @@ app.use((req, res, next) => {
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Static files - serve client files
-app.use(express.static(path.join(__dirname, '../../client')));
-
-// Health check endpoint for deployment platforms
-app.get('/api/health', (req, res) => {
-    res.status(200).json({ 
-        status: 'OK', 
+// Root health endpoint for Railway
+app.get('/', (req, res) => {
+    res.status(200).json({
+        message: 'MIT Manipal Reddit API is running',
+        status: 'OK',
         timestamp: new Date().toISOString(),
-        uptime: process.uptime(),
-        environment: process.env.NODE_ENV || 'development'
+        version: '1.0.0'
     });
 });
+
+// Railway health check - simple endpoint (must be before static files)
+app.get('/health', (req, res) => {
+    res.status(200).send('OK');
+});
+
+// Health check endpoint for deployment platforms
+app.get('/api/health', async (req, res) => {
+    try {
+        // Check MongoDB connection
+        const dbStatus = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
+        
+        res.status(200).json({ 
+            status: 'OK',
+            database: dbStatus,
+            timestamp: new Date().toISOString(),
+            uptime: Math.floor(process.uptime()),
+            environment: process.env.NODE_ENV || 'development',
+            version: '1.0.0'
+        });
+    } catch (error) {
+        res.status(503).json({
+            status: 'ERROR',
+            message: error.message,
+            timestamp: new Date().toISOString()
+        });
+    }
+});
+
+// Static files - serve client files
+app.use(express.static(path.join(__dirname, '../../client')));
 
 // API Routes
 app.use('/api/auth', authLimiter, authRoutes);
@@ -109,16 +137,6 @@ app.use('/api/restaurants', restaurantsRoutes);
 app.use('/api/study-buddy', require('./routes/studyBuddy'));
 app.use('/api/search', searchRoutes);
 app.use('/api/analytics', analyticsRoutes);
-
-// Health check endpoint
-app.get('/api/health', (req, res) => {
-    res.json({ 
-        status: 'OK', 
-        timestamp: new Date().toISOString(),
-        uptime: process.uptime(),
-        environment: process.env.NODE_ENV || 'development'
-    });
-});
 
 // API info endpoint
 app.get('/api', (req, res) => {
@@ -204,32 +222,7 @@ const createIndexes = async () => {
     }
 };
 
-// Graceful shutdown
-process.on('SIGTERM', async () => {
-    console.log('🔄 SIGTERM received. Shutting down gracefully...');
-    
-    try {
-        await mongoose.connection.close();
-        console.log('✅ MongoDB connection closed.');
-        process.exit(0);
-    } catch (error) {
-        console.error('❌ Error during shutdown:', error);
-        process.exit(1);
-    }
-});
-
-process.on('SIGINT', async () => {
-    console.log('🔄 SIGINT received. Shutting down gracefully...');
-    
-    try {
-        await mongoose.connection.close();
-        console.log('✅ MongoDB connection closed.');
-        process.exit(0);
-    } catch (error) {
-        console.error('❌ Error during shutdown:', error);
-        process.exit(1);
-    }
-});
+// Graceful shutdown handlers are now integrated into startServer function
 
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (err) => {
@@ -248,13 +241,33 @@ const startServer = async () => {
     try {
         await connectDB();
         
-        app.listen(PORT, () => {
+        const server = app.listen(PORT, '0.0.0.0', () => {
             console.log(`🚀 MIT Manipal Reddit Server running on port ${PORT}`);
-            console.log(`📱 Environment: ${process.env.NODE_ENV || 'development'}`);
-            console.log(`🌐 API Base URL: http://localhost:${PORT}/api`);
-            console.log(`💻 Client URL: http://localhost:${PORT}`);
-            console.log(`📊 Health Check: http://localhost:${PORT}/api/health`);
+            console.log(`📱 Environment: ${process.env.NODE_ENV || 'production'}`);
+            console.log(`🌐 Server URL: http://0.0.0.0:${PORT}`);
+            console.log(`� Health Check: http://0.0.0.0:${PORT}/health`);
+            console.log(`� API Health: http://0.0.0.0:${PORT}/api/health`);
         });
+
+        // Handle server shutdown gracefully
+        const gracefulShutdown = async (signal) => {
+            console.log(`🔄 ${signal} received. Shutting down gracefully...`);
+            
+            server.close(async () => {
+                try {
+                    await mongoose.connection.close();
+                    console.log('✅ MongoDB connection closed.');
+                    process.exit(0);
+                } catch (error) {
+                    console.error('❌ Error during shutdown:', error);
+                    process.exit(1);
+                }
+            });
+        };
+
+        process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+        process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+        
     } catch (error) {
         console.error('❌ Failed to start server:', error);
         process.exit(1);

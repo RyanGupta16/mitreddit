@@ -1,0 +1,15 @@
+[start]
+cmd = "cd server && npm start"
+
+[variables]
+NODE_ENV = "production"
+
+[phases.setup]
+dependsOn = ["build"]
+
+[phases.build]
+dependsOn = ["install"]
+cmds = ["cd server && npm install --production"]
+
+[phases.install]
+cmds = ["cd server"]
