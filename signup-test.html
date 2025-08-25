@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Signup Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 50px; }
+        .form-group { margin: 10px 0; }
+        input, select { width: 300px; padding: 10px; margin: 5px 0; }
+        button { padding: 10px 20px; background: #007bff; color: white; border: none; cursor: pointer; }
+        #result { margin: 20px 0; padding: 10px; border: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+    <h2>MIT Reddit Signup Test</h2>
+    
+    <form id="testSignupForm">
+        <div class="form-group">
+            <label>Name:</label><br>
+            <input type="text" id="name" placeholder="Full Name" required>
+        </div>
+        <div class="form-group">
+            <label>Email:</label><br>
+            <input type="email" id="email" placeholder="your.email@gmail.com" required>
+        </div>
+        <div class="form-group">
+            <label>Branch:</label><br>
+            <select id="branch" required>
+                <option value="">Select Branch</option>
+                <option value="cse">Computer Science Engineering</option>
+                <option value="ece">Electronics & Communication</option>
+                <option value="me">Mechanical Engineering</option>
+                <option value="other">Other</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Year:</label><br>
+            <select id="year" required>
+                <option value="">Select Year</option>
+                <option value="1">1st Year</option>
+                <option value="2">2nd Year</option>
+                <option value="3">3rd Year</option>
+                <option value="4">4th Year</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Password:</label><br>
+            <input type="password" id="password" placeholder="Password" required>
+        </div>
+        <div class="form-group">
+            <label>Confirm Password:</label><br>
+            <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+        </div>
+        <button type="submit">Test Signup</button>
+    </form>
+    
+    <div id="result"></div>
+    
+    <script>
+        document.getElementById('testSignupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = 'Testing signup...';
+            
+            const signupData = {
+                name: document.getElementById('name').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                branch: document.getElementById('branch').value,
+                year: document.getElementById('year').value,
+                password: document.getElementById('password').value,
+                confirmPassword: document.getElementById('confirmPassword').value
+            };
+            
+            console.log('Sending signup data:', signupData);
+            
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/signup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name: signupData.name,
+                        email: signupData.email,
+                        branch: signupData.branch,
+                        year: signupData.year,
+                        password: signupData.password
+                    })
+                });
+                
+                const result = await response.json();
+                console.log('Response:', result);
+                
+                if (result.success) {
+                    resultDiv.innerHTML = `<div style="color: green;">✅ SUCCESS: ${result.message}</div>
+                                         <div>User: ${result.data.name} (${result.data.email})</div>
+                                         <div>Username: ${result.data.username}</div>`;
+                } else {
+                    resultDiv.innerHTML = `<div style="color: red;">❌ ERROR: ${result.message}</div>`;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                resultDiv.innerHTML = `<div style="color: red;">❌ NETWORK ERROR: ${error.message}</div>`;
+            }
+        });
+    </script>
+</body>
+</html>

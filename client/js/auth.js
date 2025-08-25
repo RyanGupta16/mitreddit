@@ -145,22 +145,29 @@ class AuthManager {
         console.log('🚀 handleSignup called!', event);
         event.preventDefault();
         
-        const inputs = event.target.querySelectorAll('input, select');
+        const form = event.target;
+        const inputs = form.querySelectorAll('input, select');
         console.log('📝 Form inputs found:', inputs.length);
         
+        // Extract data using more reliable method
         const signupData = {
-            name: inputs[0].value.trim(),
-            email: inputs[1].value.trim(),
-            branch: inputs[2].value,
-            year: inputs[3].value,
-            password: inputs[4].value,
-            confirmPassword: inputs[5].value
+            name: form.querySelector('input[placeholder="Full Name"]').value.trim(),
+            email: form.querySelector('input[placeholder="Email"]').value.trim(),
+            branch: form.querySelector('select:nth-of-type(1)').value,
+            year: form.querySelector('select:nth-of-type(2)').value,
+            password: form.querySelector('input[placeholder="Password"]').value,
+            confirmPassword: form.querySelector('input[placeholder="Confirm Password"]').value
         };
         
+        console.log('📊 Extracted signup data:', signupData);
+        
         // Client-side validation
+        console.log('🔍 Starting form validation...');
         if (!this.validateSignupForm(signupData)) {
+            console.log('❌ Form validation failed!');
             return;
         }
+        console.log('✅ Form validation passed!');
         
         try {
             // Show loading state
@@ -254,11 +261,8 @@ class AuthManager {
         if (!data.password) {
             this.showFieldError('password', 'Password is required');
             isValid = false;
-        } else if (data.password.length < 8) {
-            this.showFieldError('password', 'Password must be at least 8 characters');
-            isValid = false;
-        } else if (!this.isStrongPassword(data.password)) {
-            this.showFieldError('password', 'Password must contain at least one uppercase letter, one lowercase letter, and one number');
+        } else if (data.password.length < 6) {
+            this.showFieldError('password', 'Password must be at least 6 characters');
             isValid = false;
         }
         
@@ -552,9 +556,27 @@ class AuthManager {
     }
     
     showFieldError(fieldName, message) {
-        const field = document.querySelector(`input[placeholder*="${fieldName}"], select`);
+        console.log(`🚨 Validation error for ${fieldName}: ${message}`);
+        
+        let field;
+        if (fieldName === 'name') {
+            field = document.querySelector('input[placeholder="Full Name"]');
+        } else if (fieldName === 'email') {
+            field = document.querySelector('input[placeholder="Email"]');
+        } else if (fieldName === 'password') {
+            field = document.querySelector('input[placeholder="Password"]');
+        } else if (fieldName === 'confirmPassword') {
+            field = document.querySelector('input[placeholder="Confirm Password"]');
+        } else if (fieldName === 'branch') {
+            field = document.querySelector('select:nth-of-type(1)');
+        } else if (fieldName === 'year') {
+            field = document.querySelector('select:nth-of-type(2)');
+        }
+        
         if (field) {
             this.showInputError(field, message);
+        } else {
+            console.warn(`Could not find field for ${fieldName}`);
         }
     }
     
