@@ -1,18 +1,15 @@
 # Railway deployment configuration for MIT Manipal Reddit
 [start]
-cmd = "cd server && npm start"
+cmd = "npm start"
 
 [variables]
 NODE_ENV = "production"
 
 [phases.setup]
-nixPackages = ["nodejs", "npm"]
+nixPkgs = ["nodejs", "npm"]
 
 [phases.install] 
-cmds = [
-  "cd server", 
-  "npm ci --only=production --no-optional --silent"
-]
+cmds = ["npm install"]
 
 [phases.build]
-cmds = ["echo 'Build complete'"]
+cmds = ["npm run heroku-postbuild"]
