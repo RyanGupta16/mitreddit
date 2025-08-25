@@ -58,32 +58,28 @@ const authLimiter = rateLimit({
     }
 });
 
-// CORS configuration - Allow all origins in development for global access
+// CORS configuration - Allow all origins globally
 app.use(cors({
-    origin: function (origin, callback) {
-        // Allow requests with no origin (mobile apps, curl, etc.)
-        if (!origin) return callback(null, true);
-        
-        // In development, allow all origins for global testing
-        if (process.env.NODE_ENV !== 'production') {
-            callback(null, true);
-        } else {
-            // In production, only allow specific domains
-            const allowedOrigins = [
-                process.env.CLIENT_URL,
-                process.env.PRODUCTION_URL,
-                process.env.DOMAIN_URL
-            ].filter(Boolean);
-            
-            if (allowedOrigins.indexOf(origin) !== -1) {
-                callback(null, true);
-            } else {
-                callback(new Error('Not allowed by CORS'));
-            }
-        }
-    },
-    credentials: true
+    origin: true, // Allow all origins
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+    credentials: true,
+    optionsSuccessStatus: 200
 }));
+
+// Additional CORS middleware to ensure headers are always set
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    res.header('Access-Control-Allow-Credentials', 'true');
+    
+    if (req.method === 'OPTIONS') {
+        res.sendStatus(200);
+    } else {
+        next();
+    }
+});
 
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }));
