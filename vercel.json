@@ -7,17 +7,20 @@
     },
     {
       "src": "client/**",
-      "use": "@vercel/static"
+      "use": "@vercel/static",
+      "config": {
+        "distDir": "client"
+      }
     }
   ],
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "server/src/server.js"
+      "dest": "/server/src/server.js"
     },
     {
       "src": "/(.*)",
-      "dest": "client/$1"
+      "dest": "/client/$1"
     }
   ],
   "env": {
