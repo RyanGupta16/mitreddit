@@ -8,10 +8,9 @@
     "npm": ">=8.0.0"
   },
   "scripts": {
-    "start": "cd server && npm start",
+    "start": "node server/src/server.js",
     "dev": "cd server && npm run dev",
-    "build": "cd server && npm install --only=production",
-    "postinstall": "cd server && npm install --only=production"
+    "heroku-postbuild": "cd server && npm install --only=production"
   },
   "keywords": [
     "manipal",

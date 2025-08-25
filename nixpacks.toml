@@ -1,0 +1,18 @@
+# Railway deployment configuration for MIT Manipal Reddit
+[start]
+cmd = "cd server && npm start"
+
+[variables]
+NODE_ENV = "production"
+
+[phases.setup]
+nixPackages = ["nodejs", "npm"]
+
+[phases.install] 
+cmds = [
+  "cd server", 
+  "npm ci --only=production --no-optional --silent"
+]
+
+[phases.build]
+cmds = ["echo 'Build complete'"]
