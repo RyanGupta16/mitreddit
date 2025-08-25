@@ -2,16 +2,16 @@
 class AuthManager {
     constructor() {
         this.currentUser = null;
-        this.eventsBound = false;
-        this.bindAuthEvents();
+        // Don't bind events immediately, wait for DOM to be ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => this.bindAuthEvents());
+        } else {
+            this.bindAuthEvents();
+        }
     }
     
     bindAuthEvents() {
-        // Prevent duplicate event binding
-        if (this.eventsBound) {
-            console.log('🔄 Auth events already bound, skipping...');
-            return;
-        }
+        console.log('� AuthManager: Binding events...');
         // Tab switching
         document.querySelectorAll('.auth-tabs .tab-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -77,8 +77,6 @@ class AuthManager {
             confirmPasswordInput.addEventListener('input', (e) => this.validatePasswordConfirmation(e.target));
         }
         
-        // Mark events as bound
-        this.eventsBound = true;
         console.log('✅ All auth events successfully bound!');
     }
     

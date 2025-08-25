@@ -20,12 +20,6 @@ const userSchema = new mongoose.Schema({
             {
                 validator: validator.isEmail,
                 message: 'Please provide a valid email address'
-            },
-            {
-                validator: function(email) {
-                    return email.endsWith('@learner.manipal.edu');
-                },
-                message: 'Please use your Manipal student email address (@learner.manipal.edu)'
             }
         ]
     },

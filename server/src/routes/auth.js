@@ -47,9 +47,19 @@ router.post('/signup', validateEmailFormat, userRateLimit(3, 15 * 60 * 1000), as
             });
         }
         
+        // Generate a unique username from the name
+        const generateUsername = (name) => {
+            const baseUsername = name.toLowerCase().replace(/[^a-zA-Z0-9]/g, '');
+            const randomSuffix = Math.floor(Math.random() * 10000);
+            return `${baseUsername}${randomSuffix}`;
+        };
+        
+        const username = generateUsername(name);
+        
         // Create new user
         const user = new User({
             name: name.trim(),
+            username,
             email: email.toLowerCase().trim(),
             password,
             branch,
