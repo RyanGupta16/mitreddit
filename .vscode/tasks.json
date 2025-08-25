@@ -1,0 +1,163 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Install Server Dependencies",
+            "type": "shell",
+            "command": "cd server && npm install",
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Install Client Dependencies",
+            "type": "shell",
+            "command": "cd client && npm install",
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Start Development Server",
+            "type": "shell",
+            "command": "cd server && npm run dev",
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": [],
+            "isBackground": true
+        },
+        {
+            "label": "Start Production Server",
+            "type": "shell",
+            "command": "cd server && npm start",
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": [],
+            "isBackground": true
+        },
+        {
+            "label": "Lint Server Code",
+            "type": "shell",
+            "command": "cd server && npm run lint",
+            "group": "test",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": ["$eslint-stylish"]
+        },
+        {
+            "label": "Test Server",
+            "type": "shell",
+            "command": "cd server && npm test",
+            "group": "test",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Build All",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "Install Server Dependencies",
+                "Install Client Dependencies"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "Setup Environment",
+            "type": "shell",
+            "command": "echo 'Creating .env file...' && cd server && copy .env.example .env",
+            "windows": {
+                "command": "echo Creating .env file... && cd server && copy .env.example .env"
+            },
+            "linux": {
+                "command": "echo 'Creating .env file...' && cd server && cp .env.example .env"
+            },
+            "osx": {
+                "command": "echo 'Creating .env file...' && cd server && cp .env.example .env"
+            },
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Open Client in Browser",
+            "type": "shell",
+            "command": "start http://localhost:3000",
+            "windows": {
+                "command": "start http://localhost:3000"
+            },
+            "linux": {
+                "command": "xdg-open http://localhost:3000"
+            },
+            "osx": {
+                "command": "open http://localhost:3000"
+            },
+            "group": "test",
+            "presentation": {
+                "echo": true,
+                "reveal": "silent",
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Full Development Setup",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "Build All",
+                "Setup Environment",
+                "Start Development Server"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            }
+        }
+    ]
+}

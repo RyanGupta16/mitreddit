@@ -1,0 +1,31 @@
+{
+  "name": "manipal-reddit",
+  "version": "1.0.0",
+  "description": "Reddit-like platform for Manipal University students",
+  "main": "server/src/server.js",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "scripts": {
+    "start": "cd server && npm start",
+    "dev": "cd server && npm run dev",
+    "install-server": "cd server && npm install",
+    "install-client": "cd client && npm install",
+    "build": "npm run install-server && npm run install-client",
+    "heroku-postbuild": "npm run build"
+  },
+  "keywords": [
+    "manipal",
+    "reddit",
+    "social",
+    "university",
+    "students"
+  ],
+  "author": "Manipal Student",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/manipal-reddit.git"
+  }
+}

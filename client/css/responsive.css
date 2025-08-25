@@ -1,0 +1,414 @@
+/* Responsive Design */
+
+/* Large Desktop */
+@media (max-width: 1400px) {
+    .main-content {
+        max-width: 1100px;
+        grid-template-columns: 240px 1fr 280px;
+    }
+}
+
+/* Desktop */
+@media (max-width: 1200px) {
+    .main-content {
+        max-width: 1000px;
+        grid-template-columns: 220px 1fr 260px;
+        gap: 16px;
+    }
+    
+    .search-input {
+        width: 350px;
+    }
+}
+
+/* Small Desktop / Large Tablet */
+@media (max-width: 1024px) {
+    .nav-container {
+        padding: 0 12px;
+    }
+    
+    .search-input {
+        width: 300px;
+    }
+    
+    .main-content {
+        grid-template-columns: 200px 1fr;
+        gap: 16px;
+    }
+    
+    .right-sidebar {
+        display: none;
+    }
+    
+    .nav-links {
+        gap: 4px;
+    }
+    
+    .nav-link span {
+        display: none;
+    }
+    
+    .nav-link {
+        padding: 8px;
+        border-radius: 50%;
+    }
+}
+
+/* Tablet */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 8px 0;
+    }
+    
+    .nav-container {
+        flex-direction: column;
+        gap: 12px;
+        align-items: stretch;
+    }
+    
+    .nav-left {
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .search-container {
+        order: 3;
+        width: 100%;
+    }
+    
+    .search-input {
+        width: 100%;
+    }
+    
+    .nav-right {
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .main-content {
+        margin-top: 120px;
+        grid-template-columns: 1fr;
+        gap: 16px;
+        padding: 16px 12px;
+    }
+    
+    .sidebar {
+        order: 2;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 12px;
+    }
+    
+    .feed-container {
+        order: 1;
+    }
+    
+    .community-stats {
+        justify-content: space-around;
+    }
+    
+    .quick-links ul {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 4px;
+    }
+    
+    .trending-topics {
+        display: none;
+    }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    .navbar {
+        padding: 6px 0;
+    }
+    
+    .nav-container {
+        padding: 0 8px;
+        gap: 8px;
+    }
+    
+    .logo {
+        font-size: 18px;
+    }
+    
+    .logo i {
+        font-size: 20px;
+    }
+    
+    .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 2px;
+    }
+    
+    .nav-link {
+        padding: 6px;
+        font-size: 12px;
+    }
+    
+    .nav-link i {
+        font-size: 14px;
+    }
+    
+    .create-post-btn {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+    
+    .create-post-btn span {
+        display: none;
+    }
+    
+    .main-content {
+        margin-top: 140px;
+        padding: 12px 8px;
+        gap: 12px;
+    }
+    
+    .sidebar {
+        grid-template-columns: 1fr;
+    }
+    
+    .community-info,
+    .quick-links,
+    .widget {
+        padding: 12px;
+    }
+    
+    .sort-options {
+        padding: 8px 12px;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    
+    .sort-options::-webkit-scrollbar {
+        display: none;
+    }
+    
+    .sort-btn {
+        padding: 6px 12px;
+        font-size: 12px;
+        flex-shrink: 0;
+    }
+    
+    .post-card {
+        margin: 0 -4px;
+    }
+    
+    .post-content {
+        padding: 12px;
+    }
+    
+    .post-title {
+        font-size: 16px;
+        line-height: 1.4;
+    }
+    
+    .post-actions {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    
+    .action-btn {
+        padding: 4px 8px;
+        font-size: 11px;
+    }
+    
+    .modal-content {
+        width: 95%;
+        margin: 20px auto;
+        max-height: calc(100vh - 40px);
+    }
+    
+    .modal-header {
+        padding: 16px;
+    }
+    
+    .modal-body {
+        padding: 16px;
+    }
+    
+    .form-actions {
+        flex-direction: column-reverse;
+        gap: 8px;
+    }
+    
+    .btn-primary,
+    .btn-secondary {
+        width: 100%;
+        padding: 12px;
+    }
+}
+
+/* Extra Small Mobile */
+@media (max-width: 360px) {
+    .nav-container {
+        padding: 0 4px;
+    }
+    
+    .logo-text {
+        display: none;
+    }
+    
+    .main-content {
+        margin-top: 120px;
+        padding: 8px 4px;
+    }
+    
+    .post-card {
+        margin: 0 -2px;
+    }
+    
+    .post-content {
+        padding: 10px;
+    }
+    
+    .post-title {
+        font-size: 15px;
+    }
+    
+    .modal-content {
+        width: 98%;
+    }
+    
+    .modal-header,
+    .modal-body {
+        padding: 12px;
+    }
+}
+
+/* Landscape Mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+    .main-content {
+        margin-top: 80px;
+    }
+    
+    .modal-content {
+        max-height: 90vh;
+    }
+}
+
+/* High DPI Displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .logo i,
+    .nav-link i,
+    .action-btn i {
+        transform: translateZ(0);
+    }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --reddit-white: #1a1a1b;
+        --reddit-light-gray: #030303;
+        --reddit-text: #d7dadc;
+        --reddit-meta-text: #818384;
+        --reddit-border: #343536;
+        --hover-gray: #272729;
+        --shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        --shadow-hover: 0 4px 8px rgba(0, 0, 0, 0.4);
+    }
+    
+    .skeleton {
+        background: linear-gradient(90deg, #2a2a2a 25%, #333333 50%, #2a2a2a 75%);
+    }
+    
+    .image-upload:hover {
+        background-color: rgba(0, 121, 211, 0.05);
+    }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .loading-spinner {
+        animation: none;
+    }
+    
+    .skeleton {
+        animation: none;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .navbar,
+    .sidebar,
+    .right-sidebar,
+    .sort-options,
+    .post-actions,
+    .modal {
+        display: none !important;
+    }
+    
+    .main-content {
+        grid-template-columns: 1fr;
+        margin-top: 0;
+        max-width: none;
+    }
+    
+    .post-card {
+        break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #ccc;
+        margin-bottom: 20px;
+    }
+    
+    body {
+        background: white;
+        color: black;
+    }
+}
+
+/* Focus Styles for Accessibility */
+@media (prefers-reduced-motion: no-preference) {
+    :focus-visible {
+        outline: 2px solid var(--reddit-blue);
+        outline-offset: 2px;
+    }
+}
+
+/* Container Queries (when supported) */
+@supports (container-type: inline-size) {
+    .sidebar {
+        container-type: inline-size;
+    }
+    
+    @container (max-width: 200px) {
+        .community-stats {
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .stat {
+            align-items: center;
+            text-align: center;
+        }
+    }
+}
+
+/* Hover States for Touch Devices */
+@media (hover: none) {
+    .nav-link:hover,
+    .sort-btn:hover,
+    .action-btn:hover,
+    .vote-btn:hover {
+        background-color: transparent;
+    }
+    
+    .post-title:hover {
+        color: var(--reddit-text);
+    }
+    
+    .create-post-btn:hover {
+        transform: none;
+    }
+}

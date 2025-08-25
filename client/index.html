@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIT Manipal Reddit - Campus Community</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation Header -->
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="nav-left">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span class="logo-text">MIT Reddit</span>
+                </div>
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" placeholder="Search MIT Manipal...">
+                </div>
+            </div>
+            <div class="nav-right">
+                <div class="nav-links">
+                    <a href="#" class="nav-link active" data-page="home">
+                        <i class="fas fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    <a href="#" class="nav-link" data-page="events">
+                        <i class="fas fa-calendar"></i>
+                        <span>Events</span>
+                    </a>
+                    <a href="#" class="nav-link" data-page="parties">
+                        <i class="fas fa-music"></i>
+                        <span>Parties</span>
+                    </a>
+                    <a href="#" class="nav-link" data-page="restaurants">
+                        <i class="fas fa-utensils"></i>
+                        <span>Food</span>
+                    </a>
+                    <a href="#" class="nav-link" data-page="news">
+                        <i class="fas fa-newspaper"></i>
+                        <span>News</span>
+                    </a>
+                    <a href="#" class="nav-link" data-page="study-buddy">
+                        <i class="fas fa-graduation-cap"></i>
+                        <span>Study Buddy</span>
+                    </a>
+                    <a href="#" class="nav-link admin-only" data-page="analytics" style="display: none;">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Analytics</span>
+                    </a>
+                </div>
+                <div class="user-menu">
+                    <button class="create-post-btn" id="createPostBtn">
+                        <i class="fas fa-plus"></i>
+                        Create Post
+                    </button>
+                    <div class="user-avatar" id="userAvatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Left Sidebar -->
+        <aside class="left-sidebar">
+            <div class="community-info">
+                <div class="community-header">
+                    <i class="fas fa-graduation-cap"></i>
+                    <div>
+                        <h3>MIT Manipal Community</h3>
+                    </div>
+                </div>
+                <div class="community-stats">
+                    <div class="stat">
+                        <span class="stat-number">12.5k</span>
+                        <span class="stat-label">MEMBERS</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">2.1k</span>
+                        <span class="stat-label">ONLINE</span>
+                    </div>
+                </div>
+                <button class="join-community-btn">Join Community</button>
+            </div>
+
+            <div class="quick-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#" data-category="academics"><i class="fas fa-book-open"></i> Academics</a></li>
+                    <li><a href="#" data-category="placements"><i class="fas fa-briefcase"></i> Placements</a></li>
+                    <li><a href="#" data-category="hostels"><i class="fas fa-bed"></i> Hostels</a></li>
+                    <li><a href="#" data-category="clubs"><i class="fas fa-users"></i> Clubs & Societies</a></li>
+                    <li><a href="#" data-category="sports"><i class="fas fa-football-ball"></i> Sports</a></li>
+                    <li><a href="#" data-category="tech"><i class="fas fa-laptop-code"></i> Tech Talk</a></li>
+                    <li><a href="#" data-category="general"><i class="fas fa-comments"></i> General</a></li>
+                </ul>
+            </div>
+
+            <div class="trending-topics">
+                <h4>Trending Topics</h4>
+                <div class="trend-item">
+                    <span class="trend-tag">#TechFest2024</span>
+                    <span class="trend-count">234 posts</span>
+                </div>
+                <div class="trend-item">
+                    <span class="trend-tag">#PlacementSeason</span>
+                    <span class="trend-count">189 posts</span>
+                </div>
+                <div class="trend-item">
+                    <span class="trend-tag">#HostelLife</span>
+                    <span class="trend-count">156 posts</span>
+                </div>
+                <div class="trend-item">
+                    <span class="trend-tag">#ManipalEats</span>
+                    <span class="trend-count">98 posts</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Center Feed -->
+        <div class="center-feed">
+            <!-- Sort Options -->
+            <div class="feed-sort-tabs">
+                <button class="sort-tab active" data-sort="hot">
+                    <i class="fas fa-fire"></i> Hot
+                </button>
+                <button class="sort-tab" data-sort="new">
+                    <i class="fas fa-clock"></i> New
+                </button>
+                <button class="sort-tab" data-sort="top">
+                    <i class="fas fa-arrow-up"></i> Top
+                </button>
+                <button class="sort-tab" data-sort="rising">
+                    <i class="fas fa-chart-line"></i> Rising
+                </button>
+            </div>
+
+            <!-- Posts Feed -->
+            <div class="posts-feed" id="postsFeed">
+                <!-- Posts will be dynamically loaded here -->
+            </div>
+
+            <!-- Loading Indicator -->
+            <div class="loading" id="loading">
+                <i class="fas fa-spinner fa-spin"></i>
+                Loading more posts...
+            </div>
+        </div>
+
+        <!-- Right Sidebar -->
+        <aside class="right-sidebar">
+            <div class="news-widget">
+                <h4><i class="fas fa-newspaper"></i> Latest Campus News</h4>
+                <div class="news-item">
+                    <h5>New Computer Science Lab Inaugurated</h5>
+                    <p>State-of-the-art AI and ML lab opens for students...</p>
+                    <span class="news-time">2 hours ago</span>
+                </div>
+                <div class="news-item">
+                    <h5>Manipal University Rankings Update</h5>
+                    <p>MIT Manipal ranks among top engineering colleges...</p>
+                    <span class="news-time">1 day ago</span>
+                </div>
+                <div class="news-item">
+                    <h5>Annual Fest Preparations Begin</h5>
+                    <p>Student committees gear up for the biggest event...</p>
+                    <span class="news-time">2 days ago</span>
+                </div>
+            </div>
+
+            <div class="events-widget">
+                <h4><i class="fas fa-calendar-alt"></i> Upcoming Events</h4>
+                <div class="event-item">
+                    <div class="event-date">
+                        <span class="date">28</span>
+                        <span class="month">AUG</span>
+                    </div>
+                    <div class="event-info">
+                        <h5>Tech Talk: AI in Healthcare</h5>
+                        <p>Main Auditorium, 6:00 PM</p>
+                    </div>
+                </div>
+                <div class="event-item">
+                    <div class="event-date">
+                        <span class="date">30</span>
+                        <span class="month">AUG</span>
+                    </div>
+                    <div class="event-info">
+                        <h5>Freshers' Welcome Party</h5>
+                        <p>Student Center, 7:00 PM</p>
+                    </div>
+                </div>
+                <div class="event-item">
+                    <div class="event-date">
+                        <span class="date">02</span>
+                        <span class="month">SEP</span>
+                    </div>
+                    <div class="event-info">
+                        <h5>Inter-College Sports Meet</h5>
+                        <p>Sports Complex, All Day</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <!-- Study Buddy Page -->
+    <div class="page-content" id="studyBuddyPage" style="display: none;">
+        <div class="study-buddy-container">
+            <div class="study-buddy-header">
+                <h2><i class="fas fa-graduation-cap"></i> Study Buddy - Connect & Learn Together</h2>
+                <p>Find study partners for assignments, projects, and exam preparation</p>
+                <button class="create-request-btn" id="createRequestBtn">
+                    <i class="fas fa-plus"></i> Request Help
+                </button>
+            </div>
+
+            <!-- Filter Controls -->
+            <div class="filter-controls">
+                <div class="filter-group">
+                    <label>Subject:</label>
+                    <select id="subjectFilter">
+                        <option value="">All Subjects</option>
+                        <option value="Computer Science">Computer Science</option>
+                        <option value="Mathematics">Mathematics</option>
+                        <option value="Physics">Physics</option>
+                        <option value="Electronics">Electronics</option>
+                        <option value="Data Structures">Data Structures</option>
+                        <option value="Web Development">Web Development</option>
+                        <option value="Database Systems">Database Systems</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Help Type:</label>
+                    <select id="helpTypeFilter">
+                        <option value="">All Types</option>
+                        <option value="assignment">Assignment</option>
+                        <option value="concept-clarification">Concept Clarification</option>
+                        <option value="project-help">Project Help</option>
+                        <option value="exam-prep">Exam Preparation</option>
+                        <option value="lab-work">Lab Work</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Urgency:</label>
+                    <select id="urgencyFilter">
+                        <option value="">All Urgencies</option>
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                        <option value="urgent">Urgent</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="study-tabs">
+                <button class="tab-btn active" data-tab="available">Available Requests</button>
+                <button class="tab-btn" data-tab="my-requests">My Requests</button>
+                <button class="tab-btn" data-tab="helping">Helping Others</button>
+            </div>
+
+            <!-- Tab Contents -->
+            <div class="tab-content active" id="available">
+                <div class="study-requests" id="availableRequests">
+                    <!-- Study requests will be populated here -->
+                </div>
+            </div>
+
+            <div class="tab-content" id="my-requests">
+                <div class="study-requests" id="myRequests">
+                    <!-- User's requests will be populated here -->
+                </div>
+            </div>
+
+            <div class="tab-content" id="helping">
+                <div class="study-requests" id="helpingRequests">
+                    <!-- Requests user is helping with -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Study Request Modal -->
+    <div class="modal" id="createRequestModal">
+        <div class="modal-content large-modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-graduation-cap"></i> Request Academic Help</h3>
+                <button class="close-btn" id="closeRequestModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="createRequestForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Subject *</label>
+                        <select class="auth-input" name="subject" required>
+                            <option value="">Select Subject</option>
+                            <option value="Computer Science">Computer Science</option>
+                            <option value="Data Structures">Data Structures</option>
+                            <option value="Algorithms">Algorithms</option>
+                            <option value="Database Systems">Database Systems</option>
+                            <option value="Web Development">Web Development</option>
+                            <option value="Machine Learning">Machine Learning</option>
+                            <option value="Mathematics">Mathematics</option>
+                            <option value="Physics">Physics</option>
+                            <option value="Chemistry">Chemistry</option>
+                            <option value="Electronics">Electronics</option>
+                            <option value="Digital Circuits">Digital Circuits</option>
+                            <option value="Signal Processing">Signal Processing</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Help Type *</label>
+                        <select class="auth-input" name="helpType" required>
+                            <option value="">Select Type</option>
+                            <option value="assignment">Assignment Help</option>
+                            <option value="concept-clarification">Concept Clarification</option>
+                            <option value="project-help">Project Help</option>
+                            <option value="exam-prep">Exam Preparation</option>
+                            <option value="lab-work">Lab Work</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Topic/Assignment Title *</label>
+                    <input type="text" class="auth-input" name="topic" placeholder="e.g., Binary Search Trees, Database Normalization" required>
+                </div>
+                <div class="form-group">
+                    <label>Detailed Description *</label>
+                    <textarea class="auth-input" name="description" rows="4" placeholder="Describe what you need help with in detail..." required></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Urgency</label>
+                        <select class="auth-input" name="urgency">
+                            <option value="medium">Medium</option>
+                            <option value="low">Low</option>
+                            <option value="high">High</option>
+                            <option value="urgent">Urgent</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Preferred Time</label>
+                        <select class="auth-input" name="preferredTime">
+                            <option value="flexible">Flexible</option>
+                            <option value="morning">Morning</option>
+                            <option value="afternoon">Afternoon</option>
+                            <option value="evening">Evening</option>
+                            <option value="night">Night</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Meeting Type</label>
+                    <select class="auth-input" name="meetingType">
+                        <option value="both">Online or Offline</option>
+                        <option value="online">Online Only</option>
+                        <option value="offline">Offline Only</option>
+                    </select>
+                </div>
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-paper-plane"></i> Post Request
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Respond to Request Modal -->
+    <div class="modal" id="respondModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-hand-helping"></i> Offer Help</h3>
+                <button class="close-btn" id="closeRespondModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="respondForm">
+                <div class="form-group">
+                    <label>Your Response Message</label>
+                    <textarea class="auth-input" name="message" rows="4" placeholder="Let them know how you can help..." required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-paper-plane"></i> Send Response
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Analytics Dashboard Page -->
+    <div class="page-content" id="analyticsPage" style="display: none;">
+        <div class="analytics-container">
+            <div class="analytics-header">
+                <h2><i class="fas fa-chart-bar"></i> Website Analytics Dashboard</h2>
+                <p>Monitor your website's performance and user engagement</p>
+                <div class="refresh-controls">
+                    <button class="refresh-btn" id="refreshAnalytics">
+                        <i class="fas fa-sync"></i> Refresh Data
+                    </button>
+                    <button class="export-btn" id="exportAnalytics">
+                        <i class="fas fa-download"></i> Export Data
+                    </button>
+                </div>
+            </div>
+
+            <!-- Overview Cards -->
+            <div class="analytics-overview">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="totalUsers">0</h3>
+                        <p>Total Users</p>
+                        <span class="stat-change" id="todayUsers">+0 today</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="totalPosts">0</h3>
+                        <p>Total Posts</p>
+                        <span class="stat-change" id="todayPosts">+0 today</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="totalComments">0</h3>
+                        <p>Total Comments</p>
+                        <span class="stat-change" id="todayComments">+0 today</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="weeklyPageViews">0</h3>
+                        <p>Weekly Page Views</p>
+                        <span class="stat-change" id="todayPageViews">0 today</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts and Tables -->
+            <div class="analytics-content">
+                <div class="analytics-row">
+                    <div class="chart-container">
+                        <h4><i class="fas fa-chart-line"></i> Daily Activity</h4>
+                        <div class="chart-placeholder" id="dailyActivityChart">
+                            <p>Chart will appear here</p>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <h4><i class="fas fa-mobile-alt"></i> Device Breakdown</h4>
+                        <div class="device-stats" id="deviceStats">
+                            <!-- Device stats will be populated here -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="analytics-row">
+                    <div class="table-container">
+                        <h4><i class="fas fa-fire"></i> Popular Pages</h4>
+                        <div class="popular-pages" id="popularPages">
+                            <!-- Popular pages table will be populated here -->
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+                        <h4><i class="fas fa-user-friends"></i> Most Active Users</h4>
+                        <div class="active-users" id="activeUsers">
+                            <!-- Active users list will be populated here -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="realtime-section">
+                    <h4><i class="fas fa-broadcast-tower"></i> Real-time Activity</h4>
+                    <div class="realtime-stats">
+                        <div class="realtime-card">
+                            <h5>Active Users (15 min)</h5>
+                            <span class="realtime-number" id="realtimeActiveUsers">0</span>
+                        </div>
+                        <div class="realtime-card">
+                            <h5>Page Views (1 hour)</h5>
+                            <span class="realtime-number" id="realtimePageViews">0</span>
+                        </div>
+                    </div>
+                    <div class="recent-activity" id="recentActivity">
+                        <!-- Recent activity feed will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Post Modal -->
+    <div class="modal" id="createPostModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Create a post</h3>
+                <button class="close-btn" id="closeModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="post-type-tabs">
+                    <button class="tab-btn active" data-type="text">
+                        <i class="fas fa-font"></i> Text
+                    </button>
+                    <button class="tab-btn" data-type="image">
+                        <i class="fas fa-image"></i> Image
+                    </button>
+                    <button class="tab-btn" data-type="link">
+                        <i class="fas fa-link"></i> Link
+                    </button>
+                </div>
+                <form id="createPostForm">
+                    <div class="form-group">
+                        <select class="category-select" required>
+                            <option value="">Choose a category</option>
+                            <option value="academics">📚 Academics</option>
+                            <option value="events">📅 Events</option>
+                            <option value="parties">🎉 Parties</option>
+                            <option value="restaurants">🍕 Food & Restaurants</option>
+                            <option value="news">📰 Campus News</option>
+                            <option value="placements">💼 Placements</option>
+                            <option value="hostels">🏠 Hostels</option>
+                            <option value="clubs">👥 Clubs & Societies</option>
+                            <option value="sports">⚽ Sports</option>
+                            <option value="tech">💻 Tech Talk</option>
+                            <option value="general">💬 General</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="title-input" placeholder="Title" required>
+                    </div>
+                    <div class="form-group">
+                        <textarea class="content-input" placeholder="Text (optional)" rows="8"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" id="cancelPost">Cancel</button>
+                        <button type="submit" class="btn-primary">Post</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content login-modal">
+            <div class="modal-header">
+                <h3>Welcome to MIT Reddit</h3>
+                <button class="close-btn" id="closeLoginModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="auth-tabs">
+                    <button class="tab-btn active" data-tab="login">Login</button>
+                    <button class="tab-btn" data-tab="signup">Sign Up</button>
+                </div>
+                
+                <!-- Login Form -->
+                <form id="loginForm" class="auth-form active">
+                    <div class="form-group">
+                        <input type="email" class="auth-input" placeholder="Email" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="auth-input" placeholder="Password" required>
+                    </div>
+                    <button type="submit" class="btn-primary full-width">Log In</button>
+                    <p class="auth-link">Don't have an account? <a href="#" class="switch-tab" data-tab="signup">Sign up</a></p>
+                </form>
+                
+                <!-- Signup Form -->
+                <form id="signupForm" class="auth-form">
+                    <div class="form-group">
+                        <input type="text" class="auth-input" placeholder="Full Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" class="auth-input" placeholder="Email (use @learner.manipal.edu)" required>
+                    </div>
+                    <div class="form-group">
+                        <select class="auth-input" required>
+                            <option value="">Select Your Branch</option>
+                            <option value="cse">Computer Science Engineering</option>
+                            <option value="ece">Electronics & Communication</option>
+                            <option value="me">Mechanical Engineering</option>
+                            <option value="ce">Civil Engineering</option>
+                            <option value="ee">Electrical Engineering</option>
+                            <option value="it">Information Technology</option>
+                            <option value="chem">Chemical Engineering</option>
+                            <option value="aero">Aeronautical Engineering</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select class="auth-input" required>
+                            <option value="">Select Year</option>
+                            <option value="1">1st Year</option>
+                            <option value="2">2nd Year</option>
+                            <option value="3">3rd Year</option>
+                            <option value="4">4th Year</option>
+                            <option value="pg">Post Graduate</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="auth-input" placeholder="Password" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="auth-input" placeholder="Confirm Password" required>
+                    </div>
+                    <button type="submit" class="btn-primary full-width">Sign Up</button>
+                    <p class="auth-link">Already have an account? <a href="#" class="switch-tab" data-tab="login">Log in</a></p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Files -->
+    <script src="js/app.js"></script>
+    <script src="js/posts.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/studyBuddy.js"></script>
+    <script src="js/analytics.js"></script>
+</body>
+</html>
