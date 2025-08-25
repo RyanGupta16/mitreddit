@@ -72,32 +72,28 @@
 
     <!-- Main Content -->
     <main class="main-content">
-        <!-- Left Sidebar -->
-        <aside class="left-sidebar">
+        <!-- Sidebar -->
+        <aside class="sidebar">
             <div class="community-info">
-                <div class="community-header">
-                    <i class="fas fa-graduation-cap"></i>
-                    <div>
-                        <h3>MIT Manipal Community</h3>
-                    </div>
-                </div>
+                <h3><i class="fas fa-university"></i> MIT Manipal Community</h3>
                 <div class="community-stats">
                     <div class="stat">
                         <span class="stat-number">12.5k</span>
-                        <span class="stat-label">MEMBERS</span>
+                        <span class="stat-label">Members</span>
                     </div>
                     <div class="stat">
                         <span class="stat-number">2.1k</span>
-                        <span class="stat-label">ONLINE</span>
+                        <span class="stat-label">Online</span>
                     </div>
                 </div>
-                <button class="join-community-btn">Join Community</button>
+                <button class="join-btn">Join Community</button>
             </div>
 
             <div class="quick-links">
                 <h4>Quick Links</h4>
                 <ul>
-                    <li><a href="#" data-category="academics"><i class="fas fa-book-open"></i> Academics</a></li>
+                    <li><a href="#" data-category="academics"><i class="fas fa-book"></i> Academics</a></li>
+                    <li><a href="#" data-page="study-buddy"><i class="fas fa-graduation-cap"></i> Study Buddy</a></li>
                     <li><a href="#" data-category="placements"><i class="fas fa-briefcase"></i> Placements</a></li>
                     <li><a href="#" data-category="hostels"><i class="fas fa-bed"></i> Hostels</a></li>
                     <li><a href="#" data-category="clubs"><i class="fas fa-users"></i> Clubs & Societies</a></li>
@@ -128,20 +124,20 @@
             </div>
         </aside>
 
-        <!-- Center Feed -->
-        <div class="center-feed">
+        <!-- Posts Feed -->
+        <div class="feed-container">
             <!-- Sort Options -->
-            <div class="feed-sort-tabs">
-                <button class="sort-tab active" data-sort="hot">
+            <div class="sort-options">
+                <button class="sort-btn active" data-sort="hot">
                     <i class="fas fa-fire"></i> Hot
                 </button>
-                <button class="sort-tab" data-sort="new">
+                <button class="sort-btn" data-sort="new">
                     <i class="fas fa-clock"></i> New
                 </button>
-                <button class="sort-tab" data-sort="top">
+                <button class="sort-btn" data-sort="top">
                     <i class="fas fa-arrow-up"></i> Top
                 </button>
-                <button class="sort-tab" data-sort="rising">
+                <button class="sort-btn" data-sort="rising">
                     <i class="fas fa-chart-line"></i> Rising
                 </button>
             </div>
@@ -160,7 +156,7 @@
 
         <!-- Right Sidebar -->
         <aside class="right-sidebar">
-            <div class="news-widget">
+            <div class="widget">
                 <h4><i class="fas fa-newspaper"></i> Latest Campus News</h4>
                 <div class="news-item">
                     <h5>New Computer Science Lab Inaugurated</h5>
@@ -179,7 +175,7 @@
                 </div>
             </div>
 
-            <div class="events-widget">
+            <div class="widget">
                 <h4><i class="fas fa-calendar-alt"></i> Upcoming Events</h4>
                 <div class="event-item">
                     <div class="event-date">
@@ -209,6 +205,40 @@
                     <div class="event-info">
                         <h5>Inter-College Sports Meet</h5>
                         <p>Sports Complex, All Day</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="widget">
+                <h4><i class="fas fa-utensils"></i> Food Spots</h4>
+                <div class="restaurant-item">
+                    <div class="restaurant-info">
+                        <h5>Cafe Coffee Day</h5>
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <span>4.2</span>
+                        </div>
+                        <p>Great coffee and snacks</p>
+                    </div>
+                </div>
+                <div class="restaurant-item">
+                    <div class="restaurant-info">
+                        <h5>Manipal Food Court</h5>
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <span>4.0</span>
+                        </div>
+                        <p>Variety of cuisines available</p>
+                    </div>
+                </div>
+                <div class="restaurant-item">
+                    <div class="restaurant-info">
+                        <h5>Pizza Corner</h5>
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <span>4.5</span>
+                        </div>
+                        <p>Best pizza in town</p>
                     </div>
                 </div>
             </div>
@@ -604,7 +634,7 @@
                         <input type="text" class="auth-input" placeholder="Full Name" required>
                     </div>
                     <div class="form-group">
-                        <input type="email" class="auth-input" placeholder="Email (use @learner.manipal.edu)" required>
+                        <input type="email" class="auth-input" placeholder="Email" required>
                     </div>
                     <div class="form-group">
                         <select class="auth-input" required>

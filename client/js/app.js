@@ -21,6 +21,9 @@ class MITReddit {
         this.loadPosts();
         this.initInfiniteScroll();
         
+        // Initialize Authentication Manager
+        this.authManager = new AuthManager();
+        
         // Show login modal if not authenticated
         if (!this.currentUser) {
             setTimeout(() => this.showLoginModal(), 1000);
