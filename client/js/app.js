@@ -9,6 +9,9 @@ class MITReddit {
         this.page = 1;
         this.hasMore = true;
         
+        // Initialize API service
+        this.api = new APIService();
+        
         this.init();
     }
     
@@ -34,10 +37,10 @@ class MITReddit {
         });
         
         // Sort events
-        document.querySelectorAll('.sort-tab').forEach(btn => {
+        document.querySelectorAll('.sort-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
-                this.switchSort(e.target.closest('.sort-tab').dataset.sort);
+                this.switchSort(e.target.closest('.sort-btn').dataset.sort);
             });
         });
         
@@ -123,7 +126,7 @@ class MITReddit {
     
     switchSort(sort) {
         // Update active sort button
-        document.querySelectorAll('.sort-tab').forEach(btn => {
+        document.querySelectorAll('.sort-btn').forEach(btn => {
             btn.classList.remove('active');
         });
         document.querySelector(`[data-sort="${sort}"]`).classList.add('active');
@@ -613,8 +616,19 @@ class MITReddit {
         // Check if user is logged in (from localStorage or session)
         const savedUser = localStorage.getItem('mitRedditUser');
         if (savedUser) {
-            this.currentUser = JSON.parse(savedUser);
-            this.updateUIForLoggedInUser();
+            try {
+                this.currentUser = JSON.parse(savedUser);
+                
+                // Restore the authentication token in the API service
+                if (this.currentUser.token) {
+                    this.api.setAuthToken(this.currentUser.token);
+                }
+                
+                this.updateUIForLoggedInUser();
+            } catch (error) {
+                console.error('Error parsing saved user data:', error);
+                localStorage.removeItem('mitRedditUser');
+            }
         }
     }
     

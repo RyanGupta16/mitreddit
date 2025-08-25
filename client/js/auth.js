@@ -310,63 +310,41 @@ class AuthManager {
     }
     
     async authenticateUser(credentials) {
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        
-        // Mock authentication - in real app, this would call backend API
-        const mockUsers = [
-            {
-                id: 1,
-                name: 'John Doe',
-                email: 'john.doe@learner.manipal.edu',
-                username: 'john_doe_21',
-                branch: 'cse',
-                year: '3',
-                avatar: null
+        try {
+            // Use the actual API service for authentication
+            const response = await window.mitReddit.api.post('/auth/login', credentials);
+            
+            // The API returns user data in the 'data' field
+            if (response.success && response.data) {
+                // Update the API service with the new token
+                window.mitReddit.api.setAuthToken(response.data.token);
+                return response.data;
+            } else {
+                throw new Error(response.message || 'Login failed');
             }
-        ];
-        
-        const user = mockUsers.find(u => u.email === credentials.email);
-        
-        if (!user) {
-            throw new Error('Account not found. Please check your email or sign up.');
+        } catch (error) {
+            console.error('Authentication error:', error);
+            throw error;
         }
-        
-        // In real app, password would be verified on backend
-        if (credentials.password.length < 6) {
-            throw new Error('Invalid password. Please try again.');
-        }
-        
-        // Simulate random authentication failure for demo
-        if (Math.random() > 0.8) {
-            throw new Error('Authentication failed. Please try again.');
-        }
-        
-        return user;
     }
     
     async createUser(userData) {
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        
-        // Check if email already exists (mock check)
-        if (Math.random() > 0.9) {
-            throw new Error('An account with this email already exists.');
+        try {
+            // Use the actual API service for user registration
+            const response = await window.mitReddit.api.post('/auth/signup', userData);
+            
+            // The API returns user data in the 'data' field
+            if (response.success && response.data) {
+                // Update the API service with the new token
+                window.mitReddit.api.setAuthToken(response.data.token);
+                return response.data;
+            } else {
+                throw new Error(response.message || 'Signup failed');
+            }
+        } catch (error) {
+            console.error('User creation error:', error);
+            throw error;
         }
-        
-        // Create new user (mock)
-        const newUser = {
-            id: Date.now(),
-            name: userData.name,
-            email: userData.email,
-            username: this.generateUsername(userData.name),
-            branch: userData.branch,
-            year: userData.year,
-            avatar: null,
-            createdAt: new Date().toISOString()
-        };
-        
-        return newUser;
     }
     
     generateUsername(name) {

@@ -294,15 +294,13 @@ class PostsManager {
     }
     
     async submitPost(postData) {
-        // Simulate API call delay
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        
-        // In a real app, this would make an HTTP request to the backend
-        // For now, we'll just simulate success
-        if (Math.random() > 0.1) { // 90% success rate
-            return { success: true, postId: Date.now() };
-        } else {
-            throw new Error('Network error');
+        // Use the actual API service to create the post
+        try {
+            const response = await window.mitReddit.api.createPost(postData);
+            return response;
+        } catch (error) {
+            console.error('Error submitting post:', error);
+            throw error;
         }
     }
     
