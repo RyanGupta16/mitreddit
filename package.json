@@ -21,9 +21,11 @@
   ],
   "author": "Manipal Student",
   "license": "MIT",
-  "dependencies": {},
   "repository": {
     "type": "git",
     "url": "https://github.com/RyanGupta16/mitreddit.git"
+  },
+  "devDependencies": {
+    "supabase": "^2.39.2"
   }
 }

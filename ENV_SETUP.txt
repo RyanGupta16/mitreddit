@@ -1,0 +1,15 @@
+COPY THIS CONTENT TO server/.env FILE:
+===========================================
+
+SUPABASE_URL=https://kewhwewjdmexpftvngoy.supabase.co
+SUPABASE_SERVICE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtld2h3ZXdqZG1leHBmdHZuZ295Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyNDU2NzQxMSwiZXhwIjoyMDQwMTQzNDExfQ.VXNOZFkD1mJHtRKOVZNMKnj8QfXWzQrGOqh1CdYmfEA
+SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtld2h3ZXdqZG1leHBmdHZuZ295Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjQ1Njc0MTEsImV4cCI6MjA0MDE0MzQxMX0.8kVpyXJrPz5aQlKdV0Iy0YdZiWxCxRqGOqh1CdYmfEA
+JWT_SECRET=mit_reddit_super_secret_jwt_key_for_supabase_migration_2024_secure
+NODE_ENV=development
+PORT=5000
+SITE_URL=http://localhost:5000
+
+INSTRUCTIONS:
+1. Create a file named ".env" in the server folder
+2. Copy the above content into that file
+3. Save the file

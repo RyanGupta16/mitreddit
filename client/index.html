@@ -581,10 +581,10 @@
                 <!-- Login Form -->
                 <form id="loginForm" class="auth-form active">
                     <div class="form-group">
-                        <input type="email" class="auth-input" placeholder="Email" required>
+                        <input type="email" name="email" class="auth-input" placeholder="Email" required>
                     </div>
                     <div class="form-group">
-                        <input type="password" class="auth-input" placeholder="Password" required>
+                        <input type="password" name="password" class="auth-input" placeholder="Password" required>
                     </div>
                     <button type="submit" class="btn-primary full-width">Log In</button>
                     <p class="auth-link">Don't have an account? <a href="#" class="switch-tab" data-tab="signup">Sign up</a></p>
@@ -593,40 +593,40 @@
                 <!-- Signup Form -->
                 <form id="signupForm" class="auth-form">
                     <div class="form-group">
-                        <input type="text" class="auth-input" placeholder="Full Name" required>
+                        <input type="text" name="name" class="auth-input" placeholder="Full Name" required>
                     </div>
                     <div class="form-group">
-                        <input type="email" class="auth-input" placeholder="Email" required>
+                        <input type="email" name="email" class="auth-input" placeholder="Email" required>
                     </div>
                     <div class="form-group">
-                        <select class="auth-input" required>
+                        <select name="branch" class="auth-input" required>
                             <option value="">Select Your Branch</option>
-                            <option value="cse">Computer Science Engineering</option>
-                            <option value="ece">Electronics & Communication</option>
-                            <option value="me">Mechanical Engineering</option>
-                            <option value="ce">Civil Engineering</option>
-                            <option value="ee">Electrical Engineering</option>
-                            <option value="it">Information Technology</option>
-                            <option value="chem">Chemical Engineering</option>
-                            <option value="aero">Aeronautical Engineering</option>
-                            <option value="other">Other</option>
+                            <option value="Computer Science Engineering">Computer Science Engineering</option>
+                            <option value="Electronics & Communication">Electronics & Communication</option>
+                            <option value="Mechanical Engineering">Mechanical Engineering</option>
+                            <option value="Civil Engineering">Civil Engineering</option>
+                            <option value="Electrical Engineering">Electrical Engineering</option>
+                            <option value="Information Technology">Information Technology</option>
+                            <option value="Chemical Engineering">Chemical Engineering</option>
+                            <option value="Aeronautical Engineering">Aeronautical Engineering</option>
+                            <option value="Other">Other</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <select class="auth-input" required>
+                        <select name="year" class="auth-input" required>
                             <option value="">Select Year</option>
-                            <option value="1">1st Year</option>
-                            <option value="2">2nd Year</option>
-                            <option value="3">3rd Year</option>
-                            <option value="4">4th Year</option>
-                            <option value="pg">Post Graduate</option>
+                            <option value="2024">1st Year</option>
+                            <option value="2023">2nd Year</option>
+                            <option value="2022">3rd Year</option>
+                            <option value="2021">4th Year</option>
+                            <option value="PG">Post Graduate</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <input type="password" class="auth-input" placeholder="Password" required>
+                        <input type="password" name="password" class="auth-input" placeholder="Password" required>
                     </div>
                     <div class="form-group">
-                        <input type="password" class="auth-input" placeholder="Confirm Password" required>
+                        <input type="password" name="confirmPassword" class="auth-input" placeholder="Confirm Password" required>
                     </div>
                     <button type="submit" class="btn-primary full-width">Sign Up</button>
                     <p class="auth-link">Already have an account? <a href="#" class="switch-tab" data-tab="login">Log in</a></p>
@@ -637,7 +637,20 @@
 
     <!-- JavaScript Files -->
     <script src="js/api.js"></script>
+    <!-- Supabase Client Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // Initialize Supabase client
+        window.supabase = supabase.createClient(
+            'https://kewhwewjdmexpftvngoy.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtld2h3ZXdqZG1leHBmdHZuZ295Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjQ1Njc0MTEsImV4cCI6MjA0MDE0MzQxMX0.8kVpyXJrPz5aQlKdV0Iy0YdZiWxCxRqGOqh1CdYmfEA'
+        );
+        console.log('✅ Supabase client initialized');
+    </script>
+    
+    <!-- Auth Scripts -->
     <script src="js/auth.js"></script>
+    <script src="js/supabaseAuth.js"></script>
     <script src="js/posts.js"></script>
     <script src="js/studyBuddy.js"></script>
     <script src="js/analytics.js"></script>

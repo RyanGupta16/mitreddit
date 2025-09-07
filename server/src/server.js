@@ -1,21 +1,24 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const path = require('path');
-require('dotenv').config();
+require('dotenv').config({ path: path.join(__dirname, '../.env') });
+
+// Import Supabase client
+const supabase = require('./config/supabaseClient');
 
 // Import routes
 const authRoutes = require('./routes/auth');
+const authSupabaseRoutes = require('./routes/authSupabase');
 const postsRoutes = require('./routes/posts');
-const usersRoutes = require('./routes/users');
-const commentsRoutes = require('./routes/comments');
-const eventsRoutes = require('./routes/events');
-const newsRoutes = require('./routes/news');
-const restaurantsRoutes = require('./routes/restaurants');
-const searchRoutes = require('./routes/search');
-const { router: analyticsRoutes } = require('./routes/analytics');
+// const usersRoutes = require('./routes/users');
+// const commentsRoutes = require('./routes/comments');
+// const eventsRoutes = require('./routes/events');
+// const newsRoutes = require('./routes/news');
+// const restaurantsRoutes = require('./routes/restaurants');
+// const searchRoutes = require('./routes/search');
+// const { router: analyticsRoutes } = require('./routes/analytics');
 
 // Import middleware
 const { authenticateToken } = require('./middleware/auth');
@@ -52,7 +55,7 @@ app.use('/api', limiter);
 // Stricter rate limiting for auth routes
 const authLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 5, // limit each IP to 5 requests per windowMs
+    max: 50, // limit each IP to 50 requests per windowMs (increased for testing)
     message: {
         error: 'Too many authentication attempts, please try again later.'
     }
@@ -85,7 +88,7 @@ app.use((req, res, next) => {
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Root health endpoint for Railway
+// Root health endpoint
 app.get('/', (req, res) => {
     res.status(200).json({
         message: 'MIT Manipal Reddit API is running',
@@ -95,7 +98,7 @@ app.get('/', (req, res) => {
     });
 });
 
-// Railway health check - simple endpoint (must be before static files)
+// Simple health check endpoint
 app.get('/health', (req, res) => {
     res.status(200).send('OK');
 });
@@ -103,8 +106,13 @@ app.get('/health', (req, res) => {
 // Health check endpoint for deployment platforms
 app.get('/api/health', async (req, res) => {
     try {
-        // Check MongoDB connection
-        const dbStatus = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
+        // Test Supabase connection by making a simple query
+        const { data, error } = await supabase
+            .from('users')
+            .select('count')
+            .limit(1);
+        
+        const dbStatus = error ? 'error' : 'connected';
         
         res.status(200).json({ 
             status: 'OK',
@@ -128,15 +136,16 @@ app.use(express.static(path.join(__dirname, '../../client')));
 
 // API Routes
 app.use('/api/auth', authLimiter, authRoutes);
+app.use('/api/auth/supabase', authLimiter, authSupabaseRoutes);
 app.use('/api/posts', postsRoutes);
-app.use('/api/users', usersRoutes);
-app.use('/api/comments', commentsRoutes);
-app.use('/api/events', eventsRoutes);
-app.use('/api/news', newsRoutes);
-app.use('/api/restaurants', restaurantsRoutes);
-app.use('/api/study-buddy', require('./routes/studyBuddy'));
-app.use('/api/search', searchRoutes);
-app.use('/api/analytics', analyticsRoutes);
+// app.use('/api/users', usersRoutes);
+// app.use('/api/comments', commentsRoutes);
+// app.use('/api/events', eventsRoutes);
+// app.use('/api/news', newsRoutes);
+// app.use('/api/restaurants', restaurantsRoutes);
+// app.use('/api/study-buddy', require('./routes/studyBuddy'));
+// app.use('/api/search', searchRoutes);
+// app.use('/api/analytics', analyticsRoutes);
 
 // API info endpoint
 app.get('/api', (req, res) => {
@@ -165,103 +174,25 @@ app.get('*', (req, res) => {
 // Error handling middleware
 app.use(errorHandler);
 
-// MongoDB Connection
-const connectDB = async () => {
-    try {
-        const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/mit_reddit';
-        
-        await mongoose.connect(mongoURI, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        });
-        
-        console.log('✅ MongoDB Connected Successfully');
-        
-        // Create indexes for better performance
-        await createIndexes();
-        
-    } catch (error) {
-        console.error('❌ MongoDB Connection Error:', error.message);
-        
-        // In development, continue without MongoDB for demo purposes
-        if (process.env.NODE_ENV === 'development') {
-            console.log('🔄 Running in demo mode without MongoDB');
-        } else {
-            process.exit(1);
-        }
-    }
-};
-
-// Create database indexes
-const createIndexes = async () => {
-    try {
-        const db = mongoose.connection.db;
-        
-        // Posts indexes
-        await db.collection('posts').createIndex({ createdAt: -1 });
-        await db.collection('posts').createIndex({ category: 1, createdAt: -1 });
-        await db.collection('posts').createIndex({ author: 1, createdAt: -1 });
-        await db.collection('posts').createIndex({ 'votes.score': -1 });
-        await db.collection('posts').createIndex({ title: 'text', content: 'text' });
-        
-        // Users indexes
-        await db.collection('users').createIndex({ email: 1 }, { unique: true });
-        await db.collection('users').createIndex({ username: 1 }, { unique: true });
-        
-        // Comments indexes
-        await db.collection('comments').createIndex({ postId: 1, createdAt: -1 });
-        await db.collection('comments').createIndex({ author: 1, createdAt: -1 });
-        
-        // Events indexes
-        await db.collection('events').createIndex({ date: 1 });
-        await db.collection('events').createIndex({ category: 1, date: 1 });
-        
-        console.log('📊 Database indexes created successfully');
-    } catch (error) {
-        console.error('Index creation error:', error.message);
-    }
-};
-
-// Graceful shutdown handlers are now integrated into startServer function
-
-// Handle unhandled promise rejections
-process.on('unhandledRejection', (err) => {
-    console.error('❌ Unhandled Promise Rejection:', err);
-    process.exit(1);
-});
-
-// Handle uncaught exceptions
-process.on('uncaughtException', (err) => {
-    console.error('❌ Uncaught Exception:', err);
-    process.exit(1);
-});
-
 // Start server
 const startServer = async () => {
     try {
-        await connectDB();
-        
         const server = app.listen(PORT, '0.0.0.0', () => {
             console.log(`🚀 MIT Manipal Reddit Server running on port ${PORT}`);
             console.log(`📱 Environment: ${process.env.NODE_ENV || 'production'}`);
             console.log(`🌐 Server URL: http://0.0.0.0:${PORT}`);
-            console.log(`� Health Check: http://0.0.0.0:${PORT}/health`);
-            console.log(`� API Health: http://0.0.0.0:${PORT}/api/health`);
+            console.log(`🔍 Health Check: http://0.0.0.0:${PORT}/health`);
+            console.log(`🩺 API Health: http://0.0.0.0:${PORT}/api/health`);
+            console.log(`✅ Supabase client initialized`);
         });
 
         // Handle server shutdown gracefully
         const gracefulShutdown = async (signal) => {
             console.log(`🔄 ${signal} received. Shutting down gracefully...`);
             
-            server.close(async () => {
-                try {
-                    await mongoose.connection.close();
-                    console.log('✅ MongoDB connection closed.');
-                    process.exit(0);
-                } catch (error) {
-                    console.error('❌ Error during shutdown:', error);
-                    process.exit(1);
-                }
+            server.close(() => {
+                console.log('✅ Server closed.');
+                process.exit(0);
             });
         };
 

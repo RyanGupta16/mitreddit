@@ -102,9 +102,11 @@ class AuthManager {
         
         const formData = new FormData(event.target);
         const loginData = {
-            email: formData.get('email') || event.target.querySelector('input[type="email"]').value,
-            password: formData.get('password') || event.target.querySelector('input[type="password"]').value
+            email: formData.get('email'),
+            password: formData.get('password')
         };
+        
+        console.log('🔑 Login attempt for:', loginData.email);
         
         // Client-side validation
         if (!this.validateLoginForm(loginData)) {
@@ -145,21 +147,17 @@ class AuthManager {
         console.log('🚀 handleSignup called!', event);
         event.preventDefault();
         
-        const form = event.target;
-        const inputs = form.querySelectorAll('input, select');
-        console.log('📝 Form inputs found:', inputs.length);
-        
-        // Extract data using more reliable method
+        const formData = new FormData(event.target);
         const signupData = {
-            name: form.querySelector('input[placeholder="Full Name"]').value.trim(),
-            email: form.querySelector('input[placeholder="Email"]').value.trim(),
-            branch: form.querySelector('select:nth-of-type(1)').value,
-            year: form.querySelector('select:nth-of-type(2)').value,
-            password: form.querySelector('input[placeholder="Password"]').value,
-            confirmPassword: form.querySelector('input[placeholder="Confirm Password"]').value
+            name: formData.get('name'),
+            email: formData.get('email'),
+            branch: formData.get('branch'),
+            year: formData.get('year'),
+            password: formData.get('password'),
+            confirmPassword: formData.get('confirmPassword')
         };
         
-        console.log('📊 Extracted signup data:', signupData);
+        console.log('📊 Extracted signup data:', { ...signupData, password: '[HIDDEN]', confirmPassword: '[HIDDEN]' });
         
         // Client-side validation
         console.log('🔍 Starting form validation...');
@@ -342,14 +340,33 @@ class AuthManager {
     
     async authenticateUser(credentials) {
         try {
-            // Use the actual API service for authentication
+            // Try Supabase auth first (preferred method)
+            if (window.supabase) {
+                console.log('🚀 Using Supabase Auth for login');
+                const { data, error } = await window.supabase.auth.signInWithPassword({
+                    email: credentials.email,
+                    password: credentials.password
+                });
+                
+                if (!error && data.user) {
+                    console.log('✅ Supabase login successful');
+                    return {
+                        user: data.user,
+                        session: data.session,
+                        supabaseAuth: true
+                    };
+                } else {
+                    console.log('❌ Supabase login failed:', error?.message);
+                }
+            }
+            
+            // Fallback to custom auth
+            console.log('🔄 Falling back to custom auth for login');
             const response = await window.mitReddit.api.post('/auth/login', credentials);
             
-            // The API returns user data in the 'data' field
-            if (response.success && response.data) {
-                // Update the API service with the new token
-                window.mitReddit.api.setAuthToken(response.data.token);
-                return response.data;
+            if (response.success && response.user && response.token) {
+                window.mitReddit.api.setAuthToken(response.token);
+                return { user: response.user, token: response.token, supabaseAuth: false };
             } else {
                 throw new Error(response.message || 'Login failed');
             }
@@ -361,14 +378,51 @@ class AuthManager {
     
     async createUser(userData) {
         try {
-            // Use the actual API service for user registration
+            // Try Supabase auth first (preferred method)
+            if (window.supabase) {
+                console.log('🚀 Using Supabase Auth for signup');
+                const { data, error } = await window.supabase.auth.signUp({
+                    email: userData.email,
+                    password: userData.password,
+                    options: {
+                        data: {
+                            name: userData.name,
+                            branch: userData.branch,
+                            year: userData.year
+                        }
+                    }
+                });
+                
+                if (error) {
+                    console.error('Supabase signup error:', error);
+                    throw new Error(error.message);
+                }
+                
+                if (data.user) {
+                    // Create user profile via backend
+                    const profileResponse = await window.mitReddit.api.post('/auth/supabase/create-profile', {
+                        authUserId: data.user.id,
+                        name: userData.name,
+                        branch: userData.branch,
+                        year: userData.year
+                    });
+                    
+                    return {
+                        user: profileResponse.user || data.user,
+                        session: data.session,
+                        supabaseAuth: true,
+                        needsEmailVerification: !data.user.email_confirmed_at
+                    };
+                }
+            }
+            
+            // Fallback to custom auth
+            console.log('🔄 Falling back to custom auth for signup');
             const response = await window.mitReddit.api.post('/auth/signup', userData);
             
-            // The API returns user data in the 'data' field
-            if (response.success && response.data) {
-                // Update the API service with the new token
-                window.mitReddit.api.setAuthToken(response.data.token);
-                return response.data;
+            if (response.success && response.user && response.token) {
+                window.mitReddit.api.setAuthToken(response.token);
+                return { user: response.user, token: response.token, supabaseAuth: false };
             } else {
                 throw new Error(response.message || 'Signup failed');
             }
