@@ -12,6 +12,7 @@ const supabase = require('./config/supabaseClient');
 const authRoutes = require('./routes/auth');
 const authSupabaseRoutes = require('./routes/authSupabase');
 const authSimpleRoutes = require('./routes/authSimple');
+const testRoutes = require('./routes/test');
 const postsRoutes = require('./routes/posts');
 // const usersRoutes = require('./routes/users');
 // const commentsRoutes = require('./routes/comments');
@@ -146,6 +147,7 @@ app.get('/api/health', async (req, res) => {
 app.use(express.static(path.join(__dirname, '../../client')));
 
 // API Routes
+app.use('/api/test', testRoutes);
 app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/auth/supabase', authLimiter, authSupabaseRoutes);
 app.use('/api/auth/simple', authLimiter, authSimpleRoutes);
