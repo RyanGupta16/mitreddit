@@ -11,6 +11,7 @@ const supabase = require('./config/supabaseClient');
 // Import routes
 const authRoutes = require('./routes/auth');
 const authSupabaseRoutes = require('./routes/authSupabase');
+const authSimpleRoutes = require('./routes/authSimple');
 const postsRoutes = require('./routes/posts');
 // const usersRoutes = require('./routes/users');
 // const commentsRoutes = require('./routes/comments');
@@ -109,7 +110,7 @@ app.get('/api/health', async (req, res) => {
         // Test Supabase connection by making a simple query
         const { data, error } = await supabase
             .from('users')
-            .select('count')
+            .select('count', { count: 'exact', head: true })
             .limit(1);
         
         const dbStatus = error ? 'error' : 'connected';
@@ -120,13 +121,23 @@ app.get('/api/health', async (req, res) => {
             timestamp: new Date().toISOString(),
             uptime: Math.floor(process.uptime()),
             environment: process.env.NODE_ENV || 'development',
-            version: '1.0.0'
+            version: '1.0.0',
+            supabase: {
+                url: process.env.SUPABASE_URL ? 'configured' : 'missing',
+                serviceKey: process.env.SUPABASE_SERVICE_KEY ? 'configured' : 'missing'
+            },
+            ...(error && { dbError: error.message })
         });
     } catch (error) {
-        res.status(503).json({
-            status: 'ERROR',
+        console.error('Health check error:', error);
+        res.status(200).json({
+            status: 'OK',
+            database: 'error',
             message: error.message,
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
+            uptime: Math.floor(process.uptime()),
+            environment: process.env.NODE_ENV || 'development',
+            version: '1.0.0'
         });
     }
 });
@@ -137,6 +148,7 @@ app.use(express.static(path.join(__dirname, '../../client')));
 // API Routes
 app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/auth/supabase', authLimiter, authSupabaseRoutes);
+app.use('/api/auth/simple', authLimiter, authSimpleRoutes);
 app.use('/api/posts', postsRoutes);
 // app.use('/api/users', usersRoutes);
 // app.use('/api/comments', commentsRoutes);

@@ -340,9 +340,9 @@ class AuthManager {
     
     async authenticateUser(credentials) {
         try {
-            // Always use custom auth for now to avoid API key issues
-            console.log('🔄 Using custom auth for login (Supabase auth disabled temporarily)');
-            const response = await window.mitReddit.api.post('/auth/login', credentials);
+            // Use simple auth that doesn't depend on database
+            console.log('🧪 Using simple auth for login (bypassing database issues)');
+            const response = await window.mitReddit.api.post('/auth/simple/login', credentials);
             
             if (response.success && response.user && response.token) {
                 window.mitReddit.api.setAuthToken(response.token);
@@ -352,15 +352,26 @@ class AuthManager {
             }
         } catch (error) {
             console.error('Authentication error:', error);
+            // Fallback to regular auth if simple auth fails
+            try {
+                console.log('🔄 Falling back to regular auth');
+                const fallbackResponse = await window.mitReddit.api.post('/auth/login', credentials);
+                if (fallbackResponse.success && fallbackResponse.user && fallbackResponse.token) {
+                    window.mitReddit.api.setAuthToken(fallbackResponse.token);
+                    return { user: fallbackResponse.user, token: fallbackResponse.token, supabaseAuth: false };
+                }
+            } catch (fallbackError) {
+                console.error('Fallback auth also failed:', fallbackError);
+            }
             throw error;
         }
     }
     
     async createUser(userData) {
         try {
-            // Always use custom auth for now to avoid API key issues
-            console.log('🔄 Using custom auth for signup (Supabase auth disabled temporarily)');
-            const response = await window.mitReddit.api.post('/auth/signup', userData);
+            // Use simple auth that doesn't depend on database
+            console.log('🧪 Using simple auth for signup (bypassing database issues)');
+            const response = await window.mitReddit.api.post('/auth/simple/signup', userData);
             
             if (response.success && response.user && response.token) {
                 window.mitReddit.api.setAuthToken(response.token);
@@ -370,6 +381,17 @@ class AuthManager {
             }
         } catch (error) {
             console.error('User creation error:', error);
+            // Fallback to regular auth if simple auth fails
+            try {
+                console.log('🔄 Falling back to regular auth');
+                const fallbackResponse = await window.mitReddit.api.post('/auth/signup', userData);
+                if (fallbackResponse.success && fallbackResponse.user && fallbackResponse.token) {
+                    window.mitReddit.api.setAuthToken(fallbackResponse.token);
+                    return { user: fallbackResponse.user, token: fallbackResponse.token, supabaseAuth: false };
+                }
+            } catch (fallbackError) {
+                console.error('Fallback auth also failed:', fallbackError);
+            }
             throw error;
         }
     }
