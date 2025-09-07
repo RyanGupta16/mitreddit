@@ -3,14 +3,14 @@
   "builds": [
     {
       "src": "server/src/server.js",
-      "use": "@vercel/node"
+      "use": "@vercel/node",
+      "config": {
+        "maxLambdaSize": "50mb"
+      }
     },
     {
       "src": "client/**",
-      "use": "@vercel/static",
-      "config": {
-        "distDir": "client"
-      }
+      "use": "@vercel/static"
     }
   ],
   "routes": [
@@ -19,10 +19,19 @@
       "dest": "/server/src/server.js"
     },
     {
-      "src": "/(.*)",
+      "src": "/(.*\\.(css|js|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|html))",
       "dest": "/client/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/client/index.html"
     }
   ],
+  "functions": {
+    "server/src/server.js": {
+      "maxDuration": 30
+    }
+  },
   "env": {
     "NODE_ENV": "production"
   }
