@@ -143,15 +143,15 @@ app.get('/api/health', async (req, res) => {
     }
 });
 
-// Static files - serve client files
-app.use(express.static(path.join(__dirname, '../../client')));
-
-// API Routes
+// API Routes (MUST come before static files)
 app.use('/api/test', testRoutes);
 app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/auth/supabase', authLimiter, authSupabaseRoutes);
 app.use('/api/auth/simple', authLimiter, authSimpleRoutes);
 app.use('/api/posts', postsRoutes);
+
+// Static files - serve client files (AFTER API routes)
+app.use(express.static(path.join(__dirname, '../../client')));
 // app.use('/api/users', usersRoutes);
 // app.use('/api/comments', commentsRoutes);
 // app.use('/api/events', eventsRoutes);
