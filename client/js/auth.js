@@ -340,38 +340,36 @@ class AuthManager {
     
     async authenticateUser(credentials) {
         try {
-            // EMERGENCY AUTH - NUCLEAR OPTION
-            console.log('🚨 Using EMERGENCY auth for login - GUARANTEED TO WORK');
-            const response = await window.mitReddit.api.post('/emergency/login', credentials);
+            // DIRECT API ROUTE - SIMPLEST POSSIBLE
+            console.log('🔥 USING DIRECT /api/login - WILL WORK!');
+            const response = await fetch('/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(credentials)
+            });
             
-            if (response.success && response.user && response.token) {
-                window.mitReddit.api.setAuthToken(response.token);
-                return { user: response.user, token: response.token, supabaseAuth: false };
+            const data = await response.json();
+            console.log('🔥 DIRECT LOGIN RESPONSE:', data);
+            
+            if (data.success && data.user && data.token) {
+                window.mitReddit.api.setAuthToken(data.token);
+                return { user: data.user, token: data.token, supabaseAuth: false };
             } else {
-                throw new Error(response.message || 'Emergency login failed');
+                throw new Error(data.message || 'Direct API login failed');
             }
         } catch (error) {
-            console.error('Emergency login error:', error);
-            // Fallback to simple auth
-            try {
-                console.log('🧪 Falling back to simple auth');
-                const fallbackResponse = await window.mitReddit.api.post('/auth/simple/login', credentials);
-                if (fallbackResponse.success && fallbackResponse.user && fallbackResponse.token) {
-                    window.mitReddit.api.setAuthToken(fallbackResponse.token);
-                    return { user: fallbackResponse.user, token: fallbackResponse.token, supabaseAuth: false };
-                }
-            } catch (fallbackError) {
-                console.error('Simple auth also failed:', fallbackError);
-            }
+            console.error('🔥 Direct API login error:', error);
             throw error;
         }
     }
     
     async createUser(userData) {
         try {
-            // DIRECT VERCEL FUNCTION - BYPASSES ALL SERVER ISSUES
-            console.log('🚨 Using DIRECT VERCEL EMERGENCY - GUARANTEED TO WORK');
-            const response = await fetch('/api/emergency-direct', {
+            // DIRECT API ROUTE - SIMPLEST POSSIBLE
+            console.log('🔥 USING DIRECT /api/signup - WILL WORK!');
+            const response = await fetch('/api/signup', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -380,26 +378,16 @@ class AuthManager {
             });
             
             const data = await response.json();
+            console.log('🔥 DIRECT API RESPONSE:', data);
             
             if (data.success && data.user && data.token) {
                 window.mitReddit.api.setAuthToken(data.token);
                 return { user: data.user, token: data.token, supabaseAuth: false };
             } else {
-                throw new Error(data.message || 'Direct Vercel signup failed');
+                throw new Error(data.message || 'Direct API signup failed');
             }
         } catch (error) {
-            console.error('Direct Vercel signup error:', error);
-            // Fallback to emergency auth
-            try {
-                console.log('🚨 Falling back to emergency auth');
-                const fallbackResponse = await window.mitReddit.api.post('/emergency/signup', userData);
-                if (fallbackResponse.success && fallbackResponse.user && fallbackResponse.token) {
-                    window.mitReddit.api.setAuthToken(fallbackResponse.token);
-                    return { user: fallbackResponse.user, token: fallbackResponse.token, supabaseAuth: false };
-                }
-            } catch (fallbackError) {
-                console.error('Emergency auth also failed:', fallbackError);
-            }
+            console.error('🔥 Direct API error:', error);
             throw error;
         }
     }
