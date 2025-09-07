@@ -11,12 +11,24 @@
     {
       "src": "client/**",
       "use": "@vercel/static"
+    },
+    {
+      "src": "test-vercel-direct.html",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
     {
+      "src": "/api/emergency/(.*)",
+      "dest": "/server/src/server.js"
+    },
+    {
       "src": "/api/(.*)",
       "dest": "/server/src/server.js"
+    },
+    {
+      "src": "/test-emergency",
+      "dest": "/test-vercel-direct.html"
     },
     {
       "src": "/(.*\\.(css|js|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|html))",
@@ -29,7 +41,8 @@
   ],
   "functions": {
     "server/src/server.js": {
-      "maxDuration": 30
+      "maxDuration": 30,
+      "memory": 1024
     }
   },
   "env": {

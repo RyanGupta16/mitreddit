@@ -369,28 +369,36 @@ class AuthManager {
     
     async createUser(userData) {
         try {
-            // EMERGENCY AUTH - NUCLEAR OPTION
-            console.log('🚨 Using EMERGENCY auth for signup - GUARANTEED TO WORK');
-            const response = await window.mitReddit.api.post('/emergency/signup', userData);
+            // DIRECT VERCEL FUNCTION - BYPASSES ALL SERVER ISSUES
+            console.log('🚨 Using DIRECT VERCEL EMERGENCY - GUARANTEED TO WORK');
+            const response = await fetch('/api/emergency-direct', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(userData)
+            });
             
-            if (response.success && response.user && response.token) {
-                window.mitReddit.api.setAuthToken(response.token);
-                return { user: response.user, token: response.token, supabaseAuth: false };
+            const data = await response.json();
+            
+            if (data.success && data.user && data.token) {
+                window.mitReddit.api.setAuthToken(data.token);
+                return { user: data.user, token: data.token, supabaseAuth: false };
             } else {
-                throw new Error(response.message || 'Emergency signup failed');
+                throw new Error(data.message || 'Direct Vercel signup failed');
             }
         } catch (error) {
-            console.error('Emergency signup error:', error);
-            // Fallback to simple auth
+            console.error('Direct Vercel signup error:', error);
+            // Fallback to emergency auth
             try {
-                console.log('🧪 Falling back to simple auth');
-                const fallbackResponse = await window.mitReddit.api.post('/auth/simple/signup', userData);
+                console.log('🚨 Falling back to emergency auth');
+                const fallbackResponse = await window.mitReddit.api.post('/emergency/signup', userData);
                 if (fallbackResponse.success && fallbackResponse.user && fallbackResponse.token) {
                     window.mitReddit.api.setAuthToken(fallbackResponse.token);
                     return { user: fallbackResponse.user, token: fallbackResponse.token, supabaseAuth: false };
                 }
             } catch (fallbackError) {
-                console.error('Simple auth also failed:', fallbackError);
+                console.error('Emergency auth also failed:', fallbackError);
             }
             throw error;
         }

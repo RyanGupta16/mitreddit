@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Direct Vercel Emergency Test</title>
+</head>
+<body>
+    <h1>🚨 EMERGENCY VERCEL TEST</h1>
+    <button onclick="testEmergencySignup()">Test Emergency Signup</button>
+    <button onclick="testEmergencyStatus()">Test Emergency Status</button>
+    <div id="results"></div>
+
+    <script>
+        async function testEmergencySignup() {
+            const results = document.getElementById('results');
+            results.innerHTML = '🚨 Testing Emergency Signup...';
+            
+            try {
+                const response = await fetch('/api/emergency/signup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: 'Emergency Test User',
+                        email: 'emergency@test.com',
+                        password: 'password123',
+                        branch: 'Computer Science Engineering',
+                        year: '3'
+                    })
+                });
+                
+                const data = await response.json();
+                results.innerHTML = `
+                    <h3>Emergency Signup Result:</h3>
+                    <p>Status: ${response.status}</p>
+                    <p>Success: ${data.success}</p>
+                    <p>Message: ${data.message}</p>
+                    <p>Token: ${data.token ? 'Generated ✅' : 'Missing ❌'}</p>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            } catch (error) {
+                results.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+            }
+        }
+
+        async function testEmergencyStatus() {
+            const results = document.getElementById('results');
+            results.innerHTML = '🚨 Testing Emergency Status...';
+            
+            try {
+                const response = await fetch('/api/emergency/status');
+                const data = await response.json();
+                results.innerHTML = `
+                    <h3>Emergency Status Result:</h3>
+                    <p>Status: ${response.status}</p>
+                    <p>Message: ${data.message}</p>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            } catch (error) {
+                results.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
