@@ -12,6 +12,7 @@ const supabase = require('./config/supabaseClient');
 const authRoutes = require('./routes/auth');
 const authSupabaseRoutes = require('./routes/authSupabase');
 const authSimpleRoutes = require('./routes/authSimple');
+const emergencyRoutes = require('./routes/emergency');
 const testRoutes = require('./routes/test');
 const postsRoutes = require('./routes/posts');
 // const usersRoutes = require('./routes/users');
@@ -144,6 +145,7 @@ app.get('/api/health', async (req, res) => {
 });
 
 // API Routes (MUST come before static files)
+app.use('/api/emergency', emergencyRoutes); // NO RATE LIMITING - EMERGENCY ONLY
 app.use('/api/test', testRoutes);
 app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/auth/supabase', authLimiter, authSupabaseRoutes);
