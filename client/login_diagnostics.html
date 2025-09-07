@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication Diagnostics</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 20px; 
+            max-width: 800px; 
+            margin: 0 auto;
+        }
+        .test-section { 
+            margin: 20px 0; 
+            padding: 15px; 
+            border: 1px solid #ddd; 
+            border-radius: 5px; 
+        }
+        .success { color: #28a745; }
+        .error { color: #dc3545; }
+        .info { color: #17a2b8; }
+        button { 
+            padding: 10px 20px; 
+            margin: 5px; 
+            cursor: pointer; 
+        }
+        input { 
+            padding: 8px; 
+            margin: 5px; 
+            width: 200px; 
+        }
+        .log { 
+            background: #f8f9fa; 
+            padding: 10px; 
+            border-radius: 3px; 
+            font-family: monospace; 
+            max-height: 300px; 
+            overflow-y: auto; 
+        }
+    </style>
+</head>
+<body>
+    <h1>🔧 MIT Reddit Authentication Diagnostics</h1>
+    
+    <div class="test-section">
+        <h3>📡 Server Connection Test</h3>
+        <button onclick="testServerConnection()">Test Server</button>
+        <div id="serverResult" class="log"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>🔑 Authentication Test</h3>
+        <p><strong>Test Credentials:</strong></p>
+        <p>Email: <code>logintest7883@learner.manipal.edu</code></p>
+        <p>Password: <code>testpass123</code></p>
+        
+        <button onclick="testDirectLogin()">Test Direct Login API</button>
+        <button onclick="testFrontendLogin()">Test Frontend Login Flow</button>
+        <div id="authResult" class="log"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>🧪 Custom Login Test</h3>
+        <input type="email" id="customEmail" placeholder="Email" value="logintest7883@learner.manipal.edu">
+        <input type="password" id="customPassword" placeholder="Password" value="testpass123">
+        <br>
+        <button onclick="testCustomLogin()">Test Custom Login</button>
+        <div id="customResult" class="log"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>📝 JavaScript Console Log</h3>
+        <div id="consoleLog" class="log"></div>
+    </div>
+
+    <script>
+        // Intercept console.log
+        const originalLog = console.log;
+        const originalError = console.error;
+        
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            appendToConsoleLog('LOG: ' + args.join(' '));
+        };
+        
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            appendToConsoleLog('ERROR: ' + args.join(' '), 'error');
+        };
+        
+        function appendToConsoleLog(message, type = 'info') {
+            const logDiv = document.getElementById('consoleLog');
+            const timestamp = new Date().toLocaleTimeString();
+            const span = document.createElement('div');
+            span.className = type;
+            span.textContent = `[${timestamp}] ${message}`;
+            logDiv.appendChild(span);
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+        
+        function log(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            const timestamp = new Date().toLocaleTimeString();
+            const div = document.createElement('div');
+            div.className = type;
+            div.textContent = `[${timestamp}] ${message}`;
+            element.appendChild(div);
+            element.scrollTop = element.scrollHeight;
+        }
+        
+        async function testServerConnection() {
+            const resultDiv = document.getElementById('serverResult');
+            resultDiv.innerHTML = '';
+            
+            try {
+                log('serverResult', 'Testing server connection...', 'info');
+                
+                const response = await fetch('/api/health');
+                const data = await response.json();
+                
+                log('serverResult', `✅ Server Status: ${data.status}`, 'success');
+                log('serverResult', `✅ Database: ${data.database}`, 'success');
+                log('serverResult', `✅ Uptime: ${data.uptime}s`, 'success');
+            } catch (error) {
+                log('serverResult', `❌ Connection failed: ${error.message}`, 'error');
+            }
+        }
+        
+        async function testDirectLogin() {
+            const resultDiv = document.getElementById('authResult');
+            resultDiv.innerHTML = '';
+            
+            try {
+                log('authResult', 'Testing direct login API call...', 'info');
+                
+                const loginData = {
+                    email: 'logintest7883@learner.manipal.edu',
+                    password: 'testpass123'
+                };
+                
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(loginData)
+                });
+                
+                log('authResult', `Response status: ${response.status}`, 'info');
+                
+                const responseData = await response.json();
+                
+                if (response.ok) {
+                    log('authResult', `✅ Login successful: ${responseData.user.name}`, 'success');
+                    log('authResult', `✅ Token received: ${responseData.token.substring(0, 20)}...`, 'success');
+                } else {
+                    log('authResult', `❌ Login failed: ${responseData.message}`, 'error');
+                }
+            } catch (error) {
+                log('authResult', `❌ Direct login error: ${error.message}`, 'error');
+            }
+        }
+        
+        async function testFrontendLogin() {
+            const resultDiv = document.getElementById('authResult');
+            
+            try {
+                log('authResult', 'Testing frontend authentication flow...', 'info');
+                
+                // Check if API service is available
+                if (typeof window.mitReddit === 'undefined') {
+                    log('authResult', '❌ window.mitReddit not found', 'error');
+                    return;
+                }
+                
+                if (typeof window.mitReddit.api === 'undefined') {
+                    log('authResult', '❌ API service not found', 'error');
+                    return;
+                }
+                
+                log('authResult', '✅ API service found', 'success');
+                
+                const loginData = {
+                    email: 'logintest7883@learner.manipal.edu',
+                    password: 'testpass123'
+                };
+                
+                const response = await window.mitReddit.api.post('/auth/login', loginData);
+                
+                if (response.success) {
+                    log('authResult', `✅ Frontend login successful: ${response.user.name}`, 'success');
+                } else {
+                    log('authResult', `❌ Frontend login failed: ${response.message}`, 'error');
+                }
+                
+            } catch (error) {
+                log('authResult', `❌ Frontend login error: ${error.message}`, 'error');
+            }
+        }
+        
+        async function testCustomLogin() {
+            const resultDiv = document.getElementById('customResult');
+            resultDiv.innerHTML = '';
+            
+            const email = document.getElementById('customEmail').value;
+            const password = document.getElementById('customPassword').value;
+            
+            try {
+                log('customResult', `Testing login for: ${email}`, 'info');
+                
+                const loginData = { email, password };
+                
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(loginData)
+                });
+                
+                const responseData = await response.json();
+                
+                if (response.ok) {
+                    log('customResult', `✅ Login successful: ${responseData.user.name}`, 'success');
+                    log('customResult', `Token: ${responseData.token.substring(0, 30)}...`, 'success');
+                } else {
+                    log('customResult', `❌ Login failed: ${responseData.message}`, 'error');
+                }
+            } catch (error) {
+                log('customResult', `❌ Custom login error: ${error.message}`, 'error');
+            }
+        }
+        
+        // Auto-test server connection on load
+        window.addEventListener('load', () => {
+            log('consoleLog', 'Diagnostics page loaded', 'info');
+            setTimeout(testServerConnection, 1000);
+        });
+    </script>
+</body>
+</html>

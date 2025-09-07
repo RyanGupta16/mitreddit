@@ -641,11 +641,16 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         // Initialize Supabase client
-        window.supabase = supabase.createClient(
-            'https://kewhwewjdmexpftvngoy.supabase.co',
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtld2h3ZXdqZG1leHBmdHZuZ295Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjQ1Njc0MTEsImV4cCI6MjA0MDE0MzQxMX0.8kVpyXJrPz5aQlKdV0Iy0YdZiWxCxRqGOqh1CdYmfEA'
-        );
-        console.log('✅ Supabase client initialized');
+        try {
+            window.supabase = supabase.createClient(
+                'https://kewhwewjdmexpftvngoy.supabase.co',
+                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtld2h3ZXdqZG1leHBmdHZuZ295Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjQ1Njc0MTEsImV4cCI6MjA0MDE0MzQxMX0.8kVpyXJrPz5aQlKdV0Iy0YdZiWxCxRqGOqh1CdYmfEA'
+            );
+            console.log('✅ Supabase client initialized successfully');
+        } catch (error) {
+            console.error('❌ Failed to initialize Supabase client:', error);
+            window.supabase = null;
+        }
     </script>
     
     <!-- Auth Scripts -->

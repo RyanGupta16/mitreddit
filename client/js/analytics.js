@@ -1,4 +1,6 @@
 // Analytics tracking and dashboard functionality
+const API_BASE_URL = ''; // Use relative URLs (empty base URL)
+
 class Analytics {
     constructor() {
         this.isAdmin = false;

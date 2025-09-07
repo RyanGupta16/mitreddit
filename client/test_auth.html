@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auth Test Page</title>
+</head>
+<body>
+    <h1>MIT Reddit Authentication Test</h1>
+    
+    <div>
+        <h2>Signup Test</h2>
+        <form id="testSignupForm">
+            <input type="text" id="name" placeholder="Name" value="Test User" required>
+            <input type="email" id="email" placeholder="Email" value="test@learner.manipal.edu" required>
+            <input type="password" id="password" placeholder="Password" value="testpass123" required>
+            <input type="text" id="branch" placeholder="Branch" value="Computer Science" required>
+            <input type="text" id="year" placeholder="Year" value="2024" required>
+            <button type="submit">Test Signup</button>
+        </form>
+    </div>
+    
+    <div>
+        <h2>Login Test</h2>
+        <form id="testLoginForm">
+            <input type="email" id="loginEmail" placeholder="Email" value="test@learner.manipal.edu" required>
+            <input type="password" id="loginPassword" placeholder="Password" value="testpass123" required>
+            <button type="submit">Test Login</button>
+        </form>
+    </div>
+    
+    <div id="results"></div>
+
+    <script>
+        const API_BASE = '/api';
+        
+        function log(message, type = 'info') {
+            const results = document.getElementById('results');
+            const div = document.createElement('div');
+            div.style.color = type === 'error' ? 'red' : type === 'success' ? 'green' : 'black';
+            div.textContent = `${new Date().toLocaleTimeString()}: ${message}`;
+            results.appendChild(div);
+            console.log(message);
+        }
+        
+        document.getElementById('testSignupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value + Math.floor(Math.random() * 10000),
+                password: document.getElementById('password').value,
+                branch: document.getElementById('branch').value,
+                year: document.getElementById('year').value
+            };
+            
+            log('Testing signup...');
+            
+            try {
+                const response = await fetch(`${API_BASE}/auth/signup`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    log(`✅ Signup successful: ${data.user.name} (${data.user.email})`, 'success');
+                } else {
+                    const error = await response.json();
+                    log(`❌ Signup failed: ${error.message}`, 'error');
+                }
+            } catch (error) {
+                log(`❌ Signup error: ${error.message}`, 'error');
+            }
+        });
+        
+        document.getElementById('testLoginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const loginData = {
+                email: document.getElementById('loginEmail').value,
+                password: document.getElementById('loginPassword').value
+            };
+            
+            log('Testing login...');
+            
+            try {
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(loginData)
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    log(`✅ Login successful: ${data.user.name}`, 'success');
+                } else {
+                    const error = await response.json();
+                    log(`❌ Login failed: ${error.message}`, 'error');
+                }
+            } catch (error) {
+                log(`❌ Login error: ${error.message}`, 'error');
+            }
+        });
+        
+        // Test server connection on page load
+        window.addEventListener('load', async () => {
+            log('Testing server connection...');
+            try {
+                const response = await fetch(`${API_BASE}/health`);
+                if (response.ok) {
+                    const data = await response.json();
+                    log(`✅ Server connected: ${data.status}, DB: ${data.database}`, 'success');
+                } else {
+                    log(`❌ Server health check failed: ${response.status}`, 'error');
+                }
+            } catch (error) {
+                log(`❌ Server connection error: ${error.message}`, 'error');
+            }
+        });
+    </script>
+</body>
+</html>

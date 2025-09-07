@@ -340,28 +340,8 @@ class AuthManager {
     
     async authenticateUser(credentials) {
         try {
-            // Try Supabase auth first (preferred method)
-            if (window.supabase) {
-                console.log('🚀 Using Supabase Auth for login');
-                const { data, error } = await window.supabase.auth.signInWithPassword({
-                    email: credentials.email,
-                    password: credentials.password
-                });
-                
-                if (!error && data.user) {
-                    console.log('✅ Supabase login successful');
-                    return {
-                        user: data.user,
-                        session: data.session,
-                        supabaseAuth: true
-                    };
-                } else {
-                    console.log('❌ Supabase login failed:', error?.message);
-                }
-            }
-            
-            // Fallback to custom auth
-            console.log('🔄 Falling back to custom auth for login');
+            // Always use custom auth for now to avoid API key issues
+            console.log('🔄 Using custom auth for login (Supabase auth disabled temporarily)');
             const response = await window.mitReddit.api.post('/auth/login', credentials);
             
             if (response.success && response.user && response.token) {
@@ -378,46 +358,8 @@ class AuthManager {
     
     async createUser(userData) {
         try {
-            // Try Supabase auth first (preferred method)
-            if (window.supabase) {
-                console.log('🚀 Using Supabase Auth for signup');
-                const { data, error } = await window.supabase.auth.signUp({
-                    email: userData.email,
-                    password: userData.password,
-                    options: {
-                        data: {
-                            name: userData.name,
-                            branch: userData.branch,
-                            year: userData.year
-                        }
-                    }
-                });
-                
-                if (error) {
-                    console.error('Supabase signup error:', error);
-                    throw new Error(error.message);
-                }
-                
-                if (data.user) {
-                    // Create user profile via backend
-                    const profileResponse = await window.mitReddit.api.post('/auth/supabase/create-profile', {
-                        authUserId: data.user.id,
-                        name: userData.name,
-                        branch: userData.branch,
-                        year: userData.year
-                    });
-                    
-                    return {
-                        user: profileResponse.user || data.user,
-                        session: data.session,
-                        supabaseAuth: true,
-                        needsEmailVerification: !data.user.email_confirmed_at
-                    };
-                }
-            }
-            
-            // Fallback to custom auth
-            console.log('🔄 Falling back to custom auth for signup');
+            // Always use custom auth for now to avoid API key issues
+            console.log('🔄 Using custom auth for signup (Supabase auth disabled temporarily)');
             const response = await window.mitReddit.api.post('/auth/signup', userData);
             
             if (response.success && response.user && response.token) {
